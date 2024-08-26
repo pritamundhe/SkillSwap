@@ -1,148 +1,88 @@
 import React from 'react';
+import image from '../assets/images/image.jpg';
 
 function Home() {
   return (
-    <div className="bg-white min-h-screen">
-      <header className="flex items-center justify-between py-4 px-6 bg-purple-500 text-white">
-        <div className="flex items-center">
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/1022/1022026.png"
-            alt="SkillSwap logo"
-            className="h-8"
-          />
-          <h1 className="ml-4 text-xl font-bold">
-            SkillSwap
-          </h1>
-        </div>
-        <nav className="flex space-x-6">
-          <a
-            href="#"
-            className="hover:text-gray-300 font-medium"
-          >
-            Skills
-          </a>
-          <a
-            href="#"
-            className="hover:text-gray-300 font-medium"
-          >
-            Webinars
-          </a>
-          <a
-            href="#"
-            className="hover:text-gray-300 font-medium"
-          >
-            Resources
-          </a>
-          <a
-            href="#"
-            className="hover:text-gray-300 font-medium"
-          >
-            Contact
-          </a>
-          <a
-            href="#"
-            className="hover:text-gray-300 font-medium"
-          >
-            Log In
-          </a>
-          <button
-            className="bg-white hover:bg-gray-200 text-purple-500 font-bold py-2 px-4 rounded"
-          >
-            Register
-          </button>
-        </nav>
-      </header>
-      <main className="container mx-auto px-4 py-12">
-        <div className="flex flex-col items-center justify-center space-y-8 md:flex-row md:space-y-0 md:space-x-16">
-          <div className="max-w-xl">
-            <h2 className="text-4xl font-bold text-gray-800">
-              Unlock Your Potential
-            </h2>
-            <h2 className="text-4xl font-bold text-gray-800">
-              with SkillSwap
-            </h2>
-            <p className="text-lg mt-4 text-gray-600">
-              Connect with experts, share your skills, and learn new ones on SkillSwap. Whether you're looking to teach, learn, or simply explore new talents, our platform offers the tools and resources you need to grow.
-            </p>
-            <div className="flex space-x-4 mt-8">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Start Learning
-              </button>
-              <button
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-              >
-                Become an Instructor
-              </button>
-            </div>
-            <div className="flex items-center space-x-8 mt-12">
-              <div className="flex items-center">
-                <svg
-                  className="w-10 h-10 text-yellow-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2l3.09 6.26L22 12l-6.91 3.74L12 21l-3.09-6.26L2 12l6.91-3.74L12 2z" />
-                </svg>
-                <span className="ml-2 font-medium text-gray-800">4.8</span>
-                <span className="ml-1 text-gray-600">Average Rating</span>
-              </div>
-              <div className="flex items-center">
-                <svg
-                  className="w-10 h-10 text-blue-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2l3.09 6.26L22 12l-6.91 3.74L12 21l-3.09-6.26L2 12l6.91-3.74L12 2z" />
-                </svg>
-                <span className="ml-2 font-medium text-gray-800">
-                  10K+
-                </span>
-                <span className="ml-1 text-gray-600">Webinars</span>
-              </div>
-              <div className="flex items-center">
-                <svg
-                  className="w-10 h-10 text-pink-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M12 2l3.09 6.26L22 12l-6.91 3.74L12 21l-3.09-6.26L2 12l6.91-3.74L12 2z" />
-                </svg>
-                <span className="ml-2 font-medium text-gray-800">
-                  5K+
-                </span>
-                <span className="ml-1 text-gray-600">Instructors</span>
-              </div>
-            </div>
-            <div className="mt-8">
-              <span className="text-gray-600 font-medium">SkillSwap</span>
-              <span className="ml-2 text-gray-600">|</span>
-              <span className="ml-2 text-gray-600 font-medium">Empowerment through Learning</span>
+    <main className="bg-gray-50">
+      
+      {/* Hero Section */}
+      <section className="bg-white py-16">
+        <div className="container mx-auto flex flex-col md:flex-row items-center px-4">
+          <div className="md:w-1/2 text-center md:text-left">
+            <h1 className="text-4xl font-bold text-gray-800">Embark on a Learning Adventure Online</h1>
+            <p className="mt-4 text-gray-600">Explore new subjects, acquire valuable skills, and shape your knowledge at your own pace, all from the comfort of your digital classroom.</p>
+            <div className="mt-8 space-x-4">
+              <button className="bg-purple-600 text-white px-6 py-3 rounded-md">Explore More</button>
+              <button className="bg-gray-100 text-gray-600 px-6 py-3 rounded-md">Financial Aid</button>
             </div>
           </div>
-          <div>
-            <img
-              src="https://i.ibb.co/wK5q7d2/learning.png"
-              alt="Learning Adventure"
-              className="rounded-lg"
-            />
+          <div className="md:w-1/2 mt-8 md:mt-0">
+            <img src={image} alt="Learning Adventure" className="w-full" />
           </div>
         </div>
-      </main>
-    </div>
+      </section>
+      {/* Search Section */}
+      <section className="py-1 bg-white">
+        <div className="container mx-auto text-center">
+        <h2 className="text-2xl font-bold text-gray-800">Search among 58,340 courses and find your favorite course</h2>
+          <div className="mt-8 flex justify-center">
+            <input type="text" placeholder="Search Anything" className="w-full max-w-lg px-4 py-2 border border-gray-300 rounded-md" />
+            <button className="bg-purple-600 text-white px-6 py-2 ml-2 rounded-md">Search</button>
+          </div>
+        </div>
+      </section>
+      {/* Collaborations Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto text-center">
+          <h2 className="text-2xl font-bold text-gray-800">Over 100 Universities And Companies Collaborate With Us</h2>
+          <div className="mt-8 flex justify-center space-x-8">
+            <img src="/path/to/logo1.png" alt="Company 1" className="h-12" />
+            <img src="/path/to/logo2.png" alt="Company 2" className="h-12" />
+            <img src="/path/to/logo3.png" alt="Company 3" className="h-12" />
+            <img src="/path/to/logo4.png" alt="Company 4" className="h-12" />
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row items-center">
+            <div className="md:w-1/2">
+              <img src="/path/to/features-image.png" alt="Features" className="w-full" />
+            </div>
+            <div className="md:w-1/2 mt-8 md:mt-0 text-center md:text-left">
+              <h2 className="text-2xl font-bold text-gray-800">Our Online Education Is Smart & Effective</h2>
+              <p className="mt-4 text-gray-600">Online education can be a convenient and flexible option for students who are unable to attend traditional in-person classes due to their location or schedule.</p>
+              <button className="mt-8 bg-purple-600 text-white px-6 py-3 rounded-md">Let's Get Started</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What Will You Get Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl font-bold text-gray-800">What Will You Get?</h2>
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white p-8 rounded-md shadow-md">
+              <h3 className="text-xl font-semibold text-gray-800">1-on-1 lessons in more than 150 languages</h3>
+              <p className="mt-4 text-gray-600">Learn from certified teachers with proven experience.</p>
+            </div>
+            <div className="bg-white p-8 rounded-md shadow-md">
+              <h3 className="text-xl font-semibold text-gray-800">Practice for free with the Talki community</h3>
+              <p className="mt-4 text-gray-600">Build connections with others and share your skills.</p>
+            </div>
+            <div className="bg-white p-8 rounded-md shadow-md">
+              <h3 className="text-xl font-semibold text-gray-800">Take learning beyond the classroom</h3>
+              <p className="mt-4 text-gray-600">Expand your knowledge in a transformative learning journey.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      
+    </main>
   );
 }
 
