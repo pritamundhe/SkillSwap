@@ -13,9 +13,9 @@ const Navbar = () => {
           <li><a href="#" className="text-gray-600 hover:text-purple-600">Contacts</a></li>
         </ul>
         <div className="hidden md:flex space-x-4">
-          <Link to="/login" className="text-gray-600 hover:text-purple-600">Log In</Link>
-          <Link to="/register">
-            <button className="bg-purple-600 text-white px-4 py-2 rounded-md">Register</button>
+          <Link to="/login" className="text-white hover:text-purple-600 px-4 py-2 bg-purple-600 rounded-md">Log In</Link>
+          <Link to="/signup">
+            <button className="bg-purple-600 text-white px-4 py-1.5 rounded-md">Register</button>
           </Link>
         </div>
         <div className="md:hidden">

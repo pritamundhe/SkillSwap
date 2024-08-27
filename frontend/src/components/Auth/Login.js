@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 const Login = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-500">
-      <div className="flex w-3/4 max-w-4xl rounded-lg shadow-lg">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-white-500 to-indigo-500">
+      <div className="flex w-3/4 max-w-4xl rounded-lg shadow-lg border-2">
         <div className="w-full p-8 lg:w-1/2 bg-white">
           <h2 className="text-2xl font-bold text-center mb-6">Hello!</h2>
           <form>
