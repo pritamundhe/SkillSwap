@@ -2,12 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add form submission logic here
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-white-500 to-indigo-500">
+    <div className="flex mt-10 items-center justify-center bg-gradient-to-r from-white-500 to-indigo-500">
       <div className="flex w-3/4 max-w-4xl rounded-lg shadow-lg border-2">
         <div className="w-full p-8 lg:w-1/2 bg-white">
           <h2 className="text-2xl font-bold text-center mb-6">Hello!</h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">E-mail</label>
               <input
@@ -31,12 +37,14 @@ const Login = () => {
               </label>
               <a href="#" className="text-sm text-purple-600 hover:underline">Forgot password?</a>
             </div>
-            <button
-              type="submit"
-              className="w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-            >
-              Sign In
-            </button>
+            <Link to="/profile">
+              <button
+                type="button"
+                className="w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+              >
+                Sign In
+              </button>
+            </Link>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600">
             Don't have an account?{' '}
