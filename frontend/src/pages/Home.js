@@ -1,5 +1,9 @@
 import React from 'react';
 import image from '../assets/images/image.jpg';
+import logo1 from '../assets/images/logo1.png'
+import logo2 from '../assets/images/logo2.png'
+import logo3 from '../assets/images/logo3.png'
+import logo4 from '../assets/images/logo4.png'
 
 function Home() {
   return (
@@ -36,10 +40,10 @@ function Home() {
         <div className="container mx-auto text-center">
           <h2 className="text-2xl font-bold text-gray-800">Over 100 Universities And Companies Collaborate With Us</h2>
           <div className="mt-8 flex justify-center space-x-8">
-            <img src="/path/to/logo1.png" alt="Company 1" className="h-12" />
-            <img src="/path/to/logo2.png" alt="Company 2" className="h-12" />
-            <img src="/path/to/logo3.png" alt="Company 3" className="h-12" />
-            <img src="/path/to/logo4.png" alt="Company 4" className="h-12" />
+            <img src={logo1} alt="Company 1" className="h-12" />
+            <img src={logo2} alt="Company 2" className="h-12" />
+            <img src={logo3} alt="Company 3" className="h-12" />
+            <img src={logo4} alt="Company 4" className="h-12" />
           </div>
         </div>
       </section>
