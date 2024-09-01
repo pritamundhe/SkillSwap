@@ -7,6 +7,12 @@ import Login from './components/Auth/Login';
 import Register from './components/Auth/Signup';
 import ProfileView from './components/Profile/ProfileView';
 import ProfileEdit from './components/Profile/ProfileEdit';
+import ChatApp from './components/Messaging/ChatApp';
+import AdminDashboard from './components/Admin/AdminDashboard';
+import UserManagement from './components/Admin/UserManagement';
+import WebinarManagement from './components/Admin/WebinarManagement';
+import SkillManagement from './components/Admin/SkillManagement';
+import Reports from './components/Admin/Reports';
 
 function App() {
   return (
@@ -19,6 +25,15 @@ function App() {
           <Route path="/signup" element={<Register />} />
           <Route path="/profile" element={<ProfileView />} />
           <Route path="/ProfileEdit" element={<ProfileEdit />} />
+          <Route path='/ChatApp' element={<ChatApp/>}/>
+          <Route path='/AdminDashboard' element={<AdminDashboard/>}/>
+          <Route path='/UserManagement' element={<UserManagement/>}/>
+          <Route path='/WebinarManagement' element={<WebinarManagement/>}/>
+          <Route path='/SkillManagement' element={<SkillManagement/>}/>
+          <Route path='/Reports' element={<Reports/>}/>
+
+
+
           {/* Add other routes here */}
         </Routes>
         <Footer />
