@@ -42,6 +42,8 @@ const ResourceList = () => {
             <ResourceDownload Title="PRITAM"/>
             <ResourceDownload Title="VAIBHAV"/>
             <ResourceDownload Title="SAHIL"/>
+            <ResourceDownload Title="Ketan" />
+            <ResourceDownload Title="Ketan" />
            
 
             <div class="overflow-hidden border border-gray-200 dark:border-gray-700 md:rounded-lg my-5"></div>
