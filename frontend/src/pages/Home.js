@@ -1,5 +1,9 @@
 import React from 'react';
 import image from '../assets/images/image.jpg';
+import logo1 from '../assets/images/logo1.png'
+import logo2 from '../assets/images/logo2.png'
+import logo3 from '../assets/images/logo3.png'
+import logo4 from '../assets/images/logo4.png'
 
 function Home() {
   return (
@@ -12,8 +16,8 @@ function Home() {
             <h1 className="text-4xl font-bold text-gray-800">Embark on a Learning Adventure Online</h1>
             <p className="mt-4 text-gray-600">Explore new subjects, acquire valuable skills, and shape your knowledge at your own pace, all from the comfort of your digital classroom.</p>
             <div className="mt-8 space-x-4">
-              <button className="bg-purple-600 text-white px-6 py-3 rounded-md">Explore More</button>
-              <button className="bg-gray-100 text-gray-600 px-6 py-3 rounded-md">Financial Aid</button>
+              <button className="text-white bg-purple-600 hover:bg-white border border-purple-600 hover:text-purple-600 px-4 py-1.5">Explore More</button>
+              <button className="text-gray-600 bg-gray hover:bg-white border border-purple-600 hover:text-purple-600 px-4 py-1.5">Financial Aid</button>
             </div>
           </div>
           <div className="md:w-1/2 mt-8 md:mt-0">
@@ -24,10 +28,10 @@ function Home() {
       {/* Search Section */}
       <section className="py-1 bg-white">
         <div className="container mx-auto text-center">
-        <h2 className="text-2xl font-bold text-gray-800">Search among 58,340 courses and find your favorite course</h2>
+        <h2 className="text-2xl font-bold text-gray-800">Search among 58,340 Skills and find your Passion</h2>
           <div className="mt-8 flex justify-center">
-            <input type="text" placeholder="Search Anything" className="w-full max-w-lg px-4 py-2 border border-gray-300 rounded-md" />
-            <button className="bg-purple-600 text-white px-6 py-2 ml-2 rounded-md">Search</button>
+            <input type="text" placeholder="Search Anything" className="w-full max-w-lg px-4 py-2 border border-gray-300 " />
+            <button className="text-white bg-purple-600 hover:bg-white border border-purple-600 hover:text-purple-600 px-4 py-1.5">Search</button>
           </div>
         </div>
       </section>
@@ -36,10 +40,10 @@ function Home() {
         <div className="container mx-auto text-center">
           <h2 className="text-2xl font-bold text-gray-800">Over 100 Universities And Companies Collaborate With Us</h2>
           <div className="mt-8 flex justify-center space-x-8">
-            <img src="/path/to/logo1.png" alt="Company 1" className="h-12" />
-            <img src="/path/to/logo2.png" alt="Company 2" className="h-12" />
-            <img src="/path/to/logo3.png" alt="Company 3" className="h-12" />
-            <img src="/path/to/logo4.png" alt="Company 4" className="h-12" />
+            <img src={logo1} alt="Company 1" className="h-12" />
+            <img src={logo2} alt="Company 2" className="h-12" />
+            <img src={logo3} alt="Company 3" className="h-12" />
+            <img src={logo4} alt="Company 4" className="h-12" />
           </div>
         </div>
       </section>
@@ -54,7 +58,7 @@ function Home() {
             <div className="md:w-1/2 mt-8 md:mt-0 text-center md:text-left">
               <h2 className="text-2xl font-bold text-gray-800">Our Online Education Is Smart & Effective</h2>
               <p className="mt-4 text-gray-600">Online education can be a convenient and flexible option for students who are unable to attend traditional in-person classes due to their location or schedule.</p>
-              <button className="mt-8 bg-purple-600 text-white px-6 py-3 rounded-md">Let's Get Started</button>
+              <button className="mt-8 text-white bg-purple-600 hover:bg-white border border-purple-600 hover:text-purple-600 px-4 py-1.5">Let's Get Started</button>
             </div>
           </div>
         </div>

@@ -2,12 +2,19 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
+  // Handle form submission
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Add form submission logic here
+    
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-r from-white-500 to-indigo-500">
+    <div className="flex mt-10 items-center justify-center bg-gradient-to-r from-white-500 to-indigo-500">
       <div className="flex w-3/4 max-w-4xl rounded-lg shadow-lg border-2">
         <div className="w-full p-8 lg:w-1/2 bg-white">
           <h2 className="text-2xl font-bold text-center mb-6">Hello!</h2>
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">E-mail</label>
               <input

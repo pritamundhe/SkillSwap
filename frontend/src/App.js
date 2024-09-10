@@ -1,11 +1,11 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import Navbar from './components/Common/Navbar';
 import Footer from './components/Common/Footer';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './components/Auth/Login';
-import Register from './components/Auth/Signup';
 import ProfileView from './components/Profile/ProfileView';
+
 import ResourceUpload from './components/Resources/ResourceUpload';
 import ResourceList from './components/Resources/ResourceList';
 
@@ -16,6 +16,14 @@ import ReviewForm from './components/Reviews/ReviewForm';
 import AddSkill from './components/Skills/SkillAdd';
 import SkillList from './components/Skills/SkillList';
 import Signup from './components/Auth/Signup';
+
+import ProfileEdit from './components/Profile/ProfileEdit';
+import ChatApp from './components/Messaging/ChatApp';
+import AdminDashboard from './components/Admin/AdminDashboard';
+import UserManagement from './components/Admin/UserManagement';
+import WebinarManagement from './components/Admin/WebinarManagement';
+import SkillManagement from './components/Admin/SkillManagement';
+import Reports from './components/Admin/Reports';
 
 
 function App() {
@@ -45,6 +53,14 @@ function App() {
           <Route path="/SkillAdd" element={<AddSkill />} />
           <Route path="/SkillList" element={<SkillList />} />
 
+          <Route path="/ProfileEdit" element={<ProfileEdit />} />
+          <Route path='/ChatApp' element={<ChatApp/>}/>
+          <Route path='/AdminDashboard' element={<AdminDashboard/>}/>
+          <Route path='/UserManagement' element={<UserManagement/>}/>
+          <Route path='/WebinarManagement' element={<WebinarManagement/>}/>
+          <Route path='/SkillManagement' element={<SkillManagement/>}/>
+          <Route path='/Reports' element={<Reports/>}/>
+
           {/* Add other routes here */}
         </Routes>
         <Footer />
@@ -54,4 +70,3 @@ function App() {
 }
 
 export default App;
-
