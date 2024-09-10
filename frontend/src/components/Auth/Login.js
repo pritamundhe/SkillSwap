@@ -38,13 +38,13 @@ const Login = () => {
               </label>
               <a href="#" className="text-sm text-purple-600 hover:underline">Forgot password?</a>
             </div>
-            <Link to="/profile">
-              <button
-                type="button"
-                className="w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
-              >
-                Sign In
-              </button>
+            <Link to="/Profile">
+            <button
+              type="submit"
+              className="w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors"
+            >
+              Sign In
+            </button>
             </Link>
           </form>
           <p className="mt-6 text-center text-sm text-gray-600">
