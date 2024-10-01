@@ -1,26 +1,29 @@
 import { useState } from "react";
-import { FiPlus } from 'react-icons/fi'; // Import icons for plus and edit
-import AddSkill from "./SkillAdd"; // AddSkillForm component for adding new skills
-import SkillCard from "./SkillCard";
+import { FiPlus } from 'react-icons/fi';
+import AddSkill from "./SkillAdd"; // Import the AddSkill form
+import SkillCard from "./SkillCard"; // Assuming this will display individual skills
 
 const SkillList = () => {
     const [showModal, setShowModal] = useState(false); // Control modal visibility
-    
+    const [skills, setSkills] = useState([]); // Array to store added skills
+
+    // Function to handle new skill addition
+    const handleAddSkill = (newSkill) => {
+        setSkills([...skills, newSkill]); // Add new skill to the list
+        setShowModal(false); // Close the modal after adding
+    };
 
     return (
         <div className="bg-gray-50 p-6 rounded-md shadow-sm w-full max-w-xl mx-auto my-5">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Skills</h2>
                 <div className="flex space-x-2">
-                    {/* Add and Edit Icons */}
-                    
                     <button
                         className="text-gray-600 hover:text-purple-600"
                         onClick={() => setShowModal(true)} // Show modal when clicked
                     >
                         <FiPlus size={24} />
                     </button>
-                    
                 </div>
             </div>
 
@@ -28,8 +31,9 @@ const SkillList = () => {
 
             {/* Skills List */}
             <div className="space-y-4">
-                <SkillCard />
-                <SkillCard />
+                {skills.map((skill, index) => (
+                    <SkillCard key={index} skill={skill} /> // Pass each skill to SkillCard
+                ))}
             </div>
 
             {/* Modal for the Add Skill Form */}
@@ -48,7 +52,7 @@ const SkillList = () => {
                             >
                                 ✖
                             </button>
-                            <AddSkill/> {/* Add skill form component */}
+                            <AddSkill onAddSkill={handleAddSkill} /> {/* Pass the handler to AddSkill */}
                         </div>
                     </div>
                 </div>

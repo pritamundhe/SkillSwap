@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Navbar from './components/Common/Navbar';
 import Footer from './components/Common/Footer';
 import Login from './components/Auth/Login';
+import Register from './components/Auth/Signup';
 import ProfileView from './components/Profile/ProfileView';
 
 import ResourceUpload from './components/Resources/ResourceUpload';
@@ -24,11 +25,12 @@ import UserManagement from './components/Admin/UserManagement';
 import WebinarManagement from './components/Admin/WebinarManagement';
 import SkillManagement from './components/Admin/SkillManagement';
 import Reports from './components/Admin/Reports';
-
+import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   return (
     <div className="App">
+      <AuthProvider>
       <Router>
         <Navbar />
         <Routes>
@@ -60,11 +62,13 @@ function App() {
           <Route path='/WebinarManagement' element={<WebinarManagement/>}/>
           <Route path='/SkillManagement' element={<SkillManagement/>}/>
           <Route path='/Reports' element={<Reports/>}/>
+          <Route path='/ProfileEdit' element={<ProfileEdit/>}/>
 
           {/* Add other routes here */}
         </Routes>
         <Footer />
       </Router>
+      </AuthProvider>
     </div>
   );
 }
