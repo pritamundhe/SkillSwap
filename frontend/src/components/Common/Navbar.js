@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthContext'; // Adjust the path based on your folder structure
-import ProfileView from '../Profile/ProfileView';
+import Profile from '../Profile/ProfileView';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,18 +53,17 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-4">
           {user ? ( // Check if user is authenticated
             <div className="flex items-center space-x-2">
-              
               <img 
                 src={user?.profilePicture || 'https://via.placeholder.com/150'} // Dummy profile picture URL
                 alt="Profile"
                 className="w-10 h-10 rounded-full object-cover cursor-pointer"
-                onClick={() => navigate('/ProfileView')} // Navigate to Profile page on click
+                onClick={() => navigate('/Profile')} // Navigate to Profile page on click
               />
               <span 
-                className="text-gray-600 cursor-pointer" 
-                
+                className="text-gray-600 cursor-pointer"
+                onClick={toggleLogoutButton}
               >
-                {user?.email || 'User'}
+                {user?.name || 'User'} {/* Display user name */}
               </span>
               {showLogout && ( // Show logout button if showLogout is true
                 <button onClick={handleLogout} className="text-white bg-red-600 hover:bg-red-500 px-4 py-1.5">
@@ -107,7 +106,7 @@ const Navbar = () => {
                   className="text-gray-600 cursor-pointer" 
                   onClick={toggleLogoutButton}
                 >
-                  {user?.name || 'User'}
+                  {user?.name || 'User'} {/* Display user name */}
                 </span>
                 {showLogout && (
                   <button onClick={handleLogout} className="text-white bg-red-600 hover:bg-red-500 px-4 py-1.5">

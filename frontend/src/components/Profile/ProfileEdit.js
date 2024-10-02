@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 const ProfileEdit = () => {
     const { user } = useContext(AuthContext);
@@ -12,10 +11,7 @@ const ProfileEdit = () => {
         projects: '',
         workHistory: '',
         education: '',
-        role: 'user',
-        skillsOffered: '',
-        skillsWanted: '',
-        profilePicture: '' // Add this field for the profile picture URL
+        profilePicture: '' // Field for the profile picture URL
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -31,14 +27,13 @@ const ProfileEdit = () => {
         if (file) {
             const formData = new FormData();
             formData.append('file', file);
-            // Replace the URL with your image upload endpoint
             try {
                 const response = await axios.post('http://localhost:5000/upload', formData, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
                     },
                 });
-                setProfile({ ...profile, profilePicture: response.data.url }); // Set the image URL
+                setProfile({ ...profile, profilePicture: response.data.url });
             } catch (error) {
                 console.error('Error uploading image:', error);
                 setError('Error uploading image. Please try again.');
@@ -60,7 +55,7 @@ const ProfileEdit = () => {
 
             if (response.status === 200) {
                 console.log('Profile updated:', response.data);
-                // Navigate or show a success message
+                // Optionally show a success message
             }
         } catch (error) {
             console.error('Error updating profile:', error);
@@ -96,19 +91,20 @@ const ProfileEdit = () => {
     return (
         <div className="p-6 shadow-md max-w-7xl mx-auto bg-gray-50">
             <div className="flex flex-col lg:flex-row gap-6">
-                {/* Left Sidebar */}
+                {/* Profile Edit Form */}
                 <div className="flex flex-col lg:w-full bg-white p-6 rounded-lg shadow-lg">
                     <h2 className="text-3xl font-semibold mb-4 text-purple-700">Edit Profile</h2>
                     <div className="flex flex-col gap-y-4">
                         <div className="flex items-center">
                             <img
                                 className="w-24 h-24 rounded-full object-cover mr-4 border-2 border-purple-500"
-                                src="https://via.placeholder.com/64"
+                                src={profile.profilePicture || 'https://via.placeholder.com/64'}
                                 alt="Profile"
                             />
                             <input
                                 type="file"
                                 accept="image/*"
+                                onChange={handleFileChange}
                                 className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-purple-700 cursor-pointer"
                             />
                         </div>
@@ -154,47 +150,6 @@ const ProfileEdit = () => {
                                     className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                                     required
                                 />
-                            </div>
-
-                            {/* Skills Offered */}
-                            <div className="mb-4">
-                                <label htmlFor="skillsOffered" className="block text-gray-700 font-medium">Skills Offered</label>
-                                <input
-                                    id="skillsOffered"
-                                    name="skillsOffered"
-                                    type="text"
-                                    value={profile.skillsOffered}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                                />
-                            </div>
-
-                            {/* Skills Wanted */}
-                            <div className="mb-4">
-                                <label htmlFor="skillsWanted" className="block text-gray-700 font-medium">Skills Wanted</label>
-                                <input
-                                    id="skillsWanted"
-                                    name="skillsWanted"
-                                    type="text"
-                                    value={profile.skillsWanted}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                                />
-                            </div>
-
-                            {/* Role Field */}
-                            <div className="mb-4">
-                                <label htmlFor="role" className="block text-gray-700 font-medium">Role</label>
-                                <select
-                                    id="role"
-                                    name="role"
-                                    value={profile.role}
-                                    onChange={handleChange}
-                                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                                >
-                                    <option value="user">User</option>
-                                    <option value="admin">Admin</option>
-                                </select>
                             </div>
 
                             {/* Projects Field */}

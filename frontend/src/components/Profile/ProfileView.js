@@ -30,7 +30,7 @@ const ProfileView = () => {
     }
 
     return (
-        <div className="p-6 rounded-lg shadow-md max-w-7xl mx-auto flex flex-col gap-6 bg-purple-100 lg:flex-row">
+        <div className="p-6 rounded-lg shadow-md max-w-10xl mx-auto flex flex-col gap-6 bg-purple-100 lg:flex-row">
             {/* Profile Details */}
             <div className="flex flex-col lg:w-1/3 bg-white rounded-lg shadow-md p-6">
                 <h2 className="text-2xl font-semibold text-center mb-4">Profile Details</h2>

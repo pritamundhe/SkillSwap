@@ -47,6 +47,7 @@ export const loginUser = async (req, res) => {
     // Generate JWT token
     const jwtToken = jwt.sign(
       {
+        name: existingUser.name,
         email: existingUser.email,
         _id: existingUser._id,
       },
@@ -58,7 +59,7 @@ export const loginUser = async (req, res) => {
       message: 'Login successful',
       success: true,
       jwtToken,
-      email,
+      email: existingUser.email,
       name: existingUser.name,
     });
   } catch (error) {
@@ -89,12 +90,12 @@ export const getUserProfile = async (req, res) => {
 
 export const updateUserProfile = async (req, res) => {
   try {
-      const { name, email, workPreference, projects, workHistory, education, role, skillsOffered, skillsWanted } = req.body;
+      const { name, email, workPreference, projects, workHistory, education } = req.body;
 
       // Optionally validate the input data here
       const updatedUser = await User.findByIdAndUpdate(
           req.user._id,
-          { name, email, workPreference, projects, workHistory, education, role, skillsOffered, skillsWanted },
+          { name, email, workPreference, projects, workHistory, education},
           { new: true, runValidators: true } // Return the updated user and run validators
       );
 

@@ -21,7 +21,8 @@ const Login = () => {
         password,
       });
   
-      const { success, message, jwtToken, name } = response.data; 
+      const { success, message, jwtToken, eami, name } = response.data; 
+      console.log(response.data)
       if (success) {
 
  
@@ -30,6 +31,7 @@ const Login = () => {
   
         localStorage.setItem('token', jwtToken);
         localStorage.setItem('name', name);
+        localStorage.setItem('eamil',eami);
   
         login(jwtToken); 
   
