@@ -26,6 +26,10 @@ const SkillSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  resources:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Resource',
+  },
   availableFor: {
     type: String,         // Specify whether the user wants to 'Teach' or 'Learn' this skill
     enum: ['Teach', 'Learn'],

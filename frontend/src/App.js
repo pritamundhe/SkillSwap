@@ -26,6 +26,7 @@ import WebinarManagement from './components/Admin/WebinarManagement';
 import SkillManagement from './components/Admin/SkillManagement';
 import Reports from './components/Admin/Reports';
 import { AuthProvider } from './contexts/AuthContext';
+import ResourcePage from './pages/ResourcePage';
 
 function App() {
   return (
@@ -63,7 +64,8 @@ function App() {
           <Route path='/SkillManagement' element={<SkillManagement/>}/>
           <Route path='/Reports' element={<Reports/>}/>
           <Route path='/ProfileEdit' element={<ProfileEdit/>}/>
-
+          <Route path='/Resource' element={<ResourcePage/>}/>
+          <Route path='/ResourceList' element={<ResourceList/>}/>
           {/* Add other routes here */}
         </Routes>
         <Footer />

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 const ProfileView = () => {
     const { user } = useContext(AuthContext); // Get the user from AuthContext
     const [profileData, setProfileData] = useState(null);
+    
     const userId = user ? user._id : null; // Assuming the user object has an _id property
     const navigate = useNavigate(); // Initialize the useNavigate hook
 

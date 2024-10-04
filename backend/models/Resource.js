@@ -20,13 +20,13 @@ const resourceSchema = new mongoose.Schema({
   // Resource linked to the webinar or profile
   linkedTo: {
     type: String,
-    enum: ['webinar', 'profile'],
-    required: true,
+    enum: ['Webinar', 'Skill'],
+ 
   },
   webinar: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Webinar',     // Linking resource to a webinar if applicable
-    required: function() {
+    ref: 'Skill',     // Linking resource to a webinar if applicable
+    function() {
       return this.linkedTo === 'webinar';
     },
   },

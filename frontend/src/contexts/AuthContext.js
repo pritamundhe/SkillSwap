@@ -18,12 +18,14 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', token);
     const userData = jwtDecode(token);
     setUser(userData);
+    localStorage.setItem('userId',userData._id);
     console.log(userData);
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
   };
 
   const isAuthenticated = user !== null; // Determine authentication status
