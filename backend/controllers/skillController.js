@@ -1,4 +1,5 @@
 import Skill from '../models/Skill.js';
+import User from '../models/User.js';
 
 // @desc    Get all skills
 // @access  Public
@@ -13,9 +14,10 @@ export const getAllSkills = async (req, res) => {
 };
 
 // @desc    Add a new skill
-// @access  Private (authenticated users only)
+
+
 export const addSkill = async (req, res) => {
-    const { name, description, category, level, availableFor } = req.body;
+    const { name, description, category, level, availableFor, addedBy } = req.body;
 
     // Validate request body
     if (!name || !description || !level || !availableFor) {
@@ -29,16 +31,26 @@ export const addSkill = async (req, res) => {
             category,
             level,
             availableFor,
-            addedBy: req.user.id // Use the ID of the authenticated user
+            addedBy, // Use the ID of the authenticated user
         });
 
         const savedSkill = await newSkill.save();
-        res.status(201).json(savedSkill);
+
+        // Update the user document to include the new skill
+        await User.findByIdAndUpdate(
+            addedBy,
+            { $push: { skillsOffered: savedSkill._id } },
+            { new: true }
+        );
+
+        res.status(201).json(savedSkill); // Return the saved skill
+
     } catch (error) {
         console.error("Error adding skill:", error);
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 // @desc    Update a skill
 // @access  Private (authenticated users only)

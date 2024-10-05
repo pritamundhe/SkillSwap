@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import multer from 'multer'; // Import multer for file upload handling
 import path from 'path'; // Import path for handling file extensions
 import { fileURLToPath } from 'url'; // Necessary for resolving directory path
+import skillRoutes from './routes/skillRoutes.js'
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 // Routes
 app.use('/users', userRoutes);
 app.use('/resource', resourceRoutes);
+app.use('/skill',skillRoutes)
 
 // Handle file path issues in ES module
 const __filename = fileURLToPath(import.meta.url);
