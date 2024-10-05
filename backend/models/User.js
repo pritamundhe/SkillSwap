@@ -20,8 +20,7 @@ const userSchema = new mongoose.Schema({
   },
   profilePic: {
     // Storing profile picture as binary data directly in MongoDB
-    data: Buffer,
-    contentType: String,
+    type: String,
   },
   // User Role
   role: {

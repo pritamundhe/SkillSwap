@@ -1,61 +1,201 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ResourceUpload = () => {
-    return (
+  // State to hold form data and file input
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    linkedTo: 'Skill',    // Default option for linkedTo
+    webinar: '',          // Will only be used if linkedTo is 'Webinar'
+    accessLevel: 'public' // Default access level
+  });
+  const [file, setFile] = useState(null);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-        <div class="bg-purple-50 h-screen w-3/4 sm:px-8 md:px-16 sm:py-8 mx-auto my-2.5">
-            <main class="container mx-auto max-w-screen-lg h-full">
+  const navigate = useNavigate();
 
-                <article aria-label="File Upload Modal" class="relative h-full flex flex-col bg-white shadow-xl rounded-md" ondrop="dropHandler(event);" ondragover="dragOverHandler(event);" ondragleave="dragLeaveHandler(event);" ondragenter="dragEnterHandler(event);">
-                    <div id="overlay" class="w-full h-full absolute top-0 left-0 pointer-events-none z-50 flex flex-col items-center justify-center rounded-md">
-                        <i>
-                            <svg class="fill-current w-12 h-12 mb-3 text-purple-700" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <path d="M19.479 10.092c-.212-3.951-3.473-7.092-7.479-7.092-4.005 0-7.267 3.141-7.479 7.092-2.57.463-4.521 2.706-4.521 5.408 0 3.037 2.463 5.5 5.5 5.5h13c3.037 0 5.5-2.463 5.5-5.5 0-2.702-1.951-4.945-4.521-5.408zm-7.479-1.092l4 4h-3v4h-2v-4h-3l4-4z" />
-                            </svg>
-                        </i>
-                        <p class="text-lg text-purple-600">Drop files to upload</p>
-                    </div>
+  // Handle form data change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
+  // Handle file input change
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
-                    <section class="h-full overflow-auto p-8 w-full  flex flex-col">
-                        <header class="border-dashed border-2 border-gray-400 py-12 flex flex-col justify-center items-center">
-                            <p class="mb-3 font-semibold text-gray-900 flex flex-wrap justify-center">
-                                <span>Drag and drop your</span>&nbsp;<span>files anywhere or</span>
-                            </p>
-                            <input id="hidden-input" type="file" multiple class="hidden" />
-                            <button id="button" class="mt-2 rounded-sm px-3 py-1 text-white bg-purple-500 hover:bg-purple-500 focus:shadow-outline focus:outline-none">
-                                Upload a file
-                            </button>
-                        </header>
+  // Handle form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
 
-                        <h1 class="pt-8 pb-3 font-semibold sm:text-lg text-gray-900">
-                            To Upload
-                        </h1>
+    const uploadedBy = localStorage.getItem('userId');
 
-                        <ul id="gallery" class="flex flex-1 flex-wrap -m-1">
-                            <li id="empty" class="h-full w-full text-center flex flex-col items-center justify-center ">
-                                <img class="mx-auto w-32" src="https://user-images.githubusercontent.com/507615/54591670-ac0a0180-4a65-11e9-846c-e55ffce0fe7b.png" alt="no data" />
-                                <span class="text-small text-gray-500">No files selected</span>
-                            </li>
-                        </ul>
-                    </section>
+    try {
+      // Create a FormData object to handle file uploads
+      const data = new FormData();
+      data.append('title', formData.title);
+      data.append('description', formData.description);
+      data.append('linkedTo', formData.linkedTo);
+      data.append('accessLevel', formData.accessLevel);
+      if (formData.linkedTo === 'Webinar') {
+        data.append('webinar', formData.webinar); // Only append webinar if linkedTo is Webinar
+      }
+      data.append('file', file); // Add file data
+      data.append('uploadedBy', uploadedBy);
 
+      const response = await axios.post('http://localhost:5000/resource/upload', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Set correct header for file uploads
+        },
+      });
 
-                    <footer class="flex justify-end px-8 pb-8 pt-4">
-                        <button id="submit" class="rounded-2 px-3 py-1 bg-purple-600 hover:bg-purple-500 text-white focus:shadow-outline focus:outline-none">
-                            Upload now
-                        </button>
-                        <button id="cancel" class="ml-3 rounded-2 px-3 py-1 hover:bg-purple-100 focus:shadow-outline focus:outline-none">
-                            Cancel
-                        </button>
-                    </footer>
-                </article>
-            </main>
+      console.log('Resource uploaded:', response.data);
+      setSuccess('Resource uploaded successfully!');
+      setFormData({
+        title: '',
+        description: '',
+        linkedTo: 'Skill',
+        webinar: '',
+        accessLevel: 'public',
+      }); // Clear form fields
+      setFile(null); // Clear file input
+      navigate('/ResourceList');
+    } catch (err) {
+      setError('Failed to upload resource');
+      console.log(err);
+    }
+  };
+
+  const { title, description, linkedTo, webinar, accessLevel } = formData;
+
+  return (
+    <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">Upload a Resource</h2>
+
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {success && <p className="text-green-500 mb-4">{success}</p>}
+
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+        {/* Title */}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
+            Resource Title
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={title}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter resource title"
+            required
+          />
         </div>
 
+        {/* Description */}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+            Resource Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={description}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Enter resource description"
+            required
+          />
+        </div>
 
+        {/* File Input */}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="file">
+            Upload File
+          </label>
+          <input
+            type="file"
+            id="file"
+            name="file"
+            onChange={handleFileChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            required
+          />
+        </div>
 
-    );
+        {/* Linked To */}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="linkedTo">
+            Linked To
+          </label>
+          <select
+            id="linkedTo"
+            name="linkedTo"
+            value={linkedTo}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            <option value="Skill">Skill</option>
+            <option value="Webinar">Webinar</option>
+          </select>
+        </div>
+
+        {/* Webinar Selection (only show if linkedTo is Webinar) */}
+        {linkedTo === 'Webinar' && (
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="webinar">
+              Select Webinar
+            </label>
+            <input
+              type="text"
+              id="webinar"
+              name="webinar"
+              value={webinar}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Enter webinar ID"
+              required={linkedTo === 'Webinar'}
+            />
+          </div>
+        )}
+
+        {/* Access Level */}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="accessLevel">
+            Access Level
+          </label>
+          <select
+            id="accessLevel"
+            name="accessLevel"
+            value={accessLevel}
+            onChange={handleChange}
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          >
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Upload Resource
+        </button>
+      </form>
+    </div>
+  );
 };
 
 export default ResourceUpload;

@@ -1,42 +1,59 @@
-import { useState } from "react";
-import axios from "axios"; // Make sure you have axios installed
+import { useState, useContext } from "react";
+import axios from "axios"; 
+import { AuthContext } from "../../contexts/AuthContext"; 
 
-const AddSkill = ({ onAddSkill ,userId}) => {
+const AddSkill = ({ onAddSkill }) => {
+    const { user } = useContext(AuthContext); 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('Other');
     const [level, setLevel] = useState('Beginner');
     const [availableFor, setAvailableFor] = useState('Teach');
-
-    console.log('Adding skill for userId:', userId); // Debug log to ensure userId is passed
+    const [error, setError] = useState(''); 
+    const [success, setSuccess] = useState(''); 
+    const [loading, setLoading] = useState(false); // New loading state
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
+        if (!user) {
+            setError('You must be logged in to add a skill.');
+            return;
+        }
+
         const newSkill = {
             name,
             description,
             category,
             level,
             availableFor,
+            addedBy: user._id,
         };
-    
+
         try {
-            const response = await axios.post(`http://localhost:5000/skill/addSkill/${userId}`, newSkill, {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`, // Ensure token is present
-                },
-            });
-            onAddSkill(response.data); // Pass the new skill to the parent
+            setLoading(true); // Set loading state
+            const response = await axios.post(`http://localhost:5000/skill/addSkill`, newSkill); 
+            onAddSkill(response.data); 
+            setSuccess('Skill added successfully!'); 
+            // Clear form fields
+            setName('');
+            setDescription('');
+            setCategory('Other');
+            setLevel('Beginner');
+            setAvailableFor('Teach');
+            setError(''); // Clear error message on success
         } catch (error) {
-            console.error('Error adding skill:', error.response ? error.response.data : error.message);
+            console.error('Error adding skill:', error);
+            setError('Error adding skill. Please try again.'); 
+        } finally {
+            setLoading(false); // Reset loading state
         }
-        
     };
-    
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <div className="text-red-600">{error}</div>} 
+            {success && <div className="text-green-600">{success}</div>} 
             <div>
                 <label className="block text-sm font-medium text-gray-700">Skill Name</label>
                 <input
@@ -101,8 +118,12 @@ const AddSkill = ({ onAddSkill ,userId}) => {
             </div>
 
             <div className="flex justify-end">
-                <button type="submit" className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700">
-                    Add Skill
+                <button 
+                    type="submit" 
+                    className={`bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                    disabled={loading} // Disable button when loading
+                >
+                    {loading ? 'Adding...' : 'Add Skill'}
                 </button>
             </div>
         </form>

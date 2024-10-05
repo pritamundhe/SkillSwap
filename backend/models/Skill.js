@@ -3,45 +3,44 @@ import mongoose from 'mongoose';
 const SkillSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,      // Skill name is mandatory
-    trim: true,          // Remove any leading/trailing spaces
+    required: true,      
+    trim: true,          
   },
   description: {
     type: String,
-    required: true,      // Skill description is mandatory
+    required: true,      
     trim: true,
   },
   category: {
-    type: String,        // Optional field to categorize skills
-    enum: ['Technical', 'Creative', 'Business', 'Personal Development', 'Other'], // Possible categories
+    type: String,        
+    enum: ['Technical', 'Creative', 'Business', 'Personal Development', 'Other'], 
     default: 'Other',
   },
   level: {
-    type: String,        // Proficiency level of the skill
+    type: String,        
     enum: ['Beginner', 'Intermediate', 'Advanced'],
     required: true,
   },
   addedBy: {
-    type: mongoose.Schema.Types.ObjectId, // Reference to the user who added the skill
+    type: mongoose.Schema.Types.ObjectId, 
     ref: 'User',
     required: true,
   },
-  availableFor: {
-    type: String,         // Specify whether the user wants to 'Teach' or 'Learn' this skill
-    enum: ['Teach', 'Learn'],
-    required: true,
+  resources:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Resource',
   },
   createdAt: {
     type: Date,
-    default: Date.now,    // Store the date when the skill was added
+    default: Date.now,    
   },
   updatedAt: {
-    type: Date,           // Store the date when the skill was last updated
+    type: Date,           
     default: Date.now,
   }
 });
 
-// Automatically update the 'updatedAt' field whenever the skill document is modified
+
 SkillSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();

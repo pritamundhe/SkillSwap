@@ -1,4 +1,5 @@
 import Skill from '../models/Skill.js';
+import User from '../models/User.js';
 
 // Ensure your Skill model has an addedBy field that references the User model
 // and the User model has a username field
@@ -14,49 +15,41 @@ export const getAllSkills = async (req, res) => {
 };
 
 
-
-// @desc    Add a new skill
-// @access  Private (authenticated users only)
 export const addSkill = async (req, res) => {
-    try {
-      // Destructure necessary fields from request body
-      const { name, description, category, level, availableFor } = req.body;
-      const { id: uploadedBy } = req.user; // Assuming req.user contains the authenticated user info
-  
-      // Validate required fields
-      if (!name || !description || !level || !availableFor) {
+    const { name, description, category, level, availableFor, addedBy } = req.body;
+
+    // Validate request body
+    if (!name || !description || !level || !availableFor) {
         return res.status(400).json({ message: 'Please provide all required fields' });
-      }
-  
-      // Create a new skill instance
-      const newSkill = new Skill({
-        name,
-        description,
-        category,
-        level,
-        availableFor,
-        addedBy: uploadedBy, // Using the authenticated user ID
-      });
-  
-      // Save the skill to the database
-      const savedSkill = await newSkill.save();
-  
-      // Update the User's skills offered array
-      await User.findByIdAndUpdate(
-        uploadedBy,
-        { $push: { skillsOffered: savedSkill._id } }, // Push the new skill ID into the skills offered array
-        { new: true } // Return the updated user document
-      );
-  
-      return res.status(201).json({
-        message: 'Skill added successfully!',
-        skill: savedSkill,
-      });
+    }
+
+    try {
+        const newSkill = new Skill({
+            name,
+            description,
+            category,
+            level,
+            availableFor,
+            addedBy, // Use the ID of the authenticated user
+        });
+
+        const savedSkill = await newSkill.save();
+
+        // Update the user document to include the new skill
+        await User.findByIdAndUpdate(
+            addedBy,
+            { $push: { skillsOffered: savedSkill._id } },
+            { new: true }
+        );
+
+        res.status(201).json(savedSkill); // Return the saved skill
+
     } catch (error) {
       console.error('Error adding skill:', error);
       return res.status(500).json({ error: error.message });
     }
   };
+
 
 
 // @desc    Update a skill

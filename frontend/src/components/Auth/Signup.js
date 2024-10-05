@@ -3,24 +3,31 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Signup = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // State object to hold form data
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
   
   const [error, setError] = useState('');
   const navigate = useNavigate(); // For navigation after successful signup
+
+  // Handler function to update state
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
   
     try {
-      const response = await axios.post('http://localhost:5000/users/register', {
-        name,
-        email,
-        password,
-      });
-  
+      const response = await axios.post('http://localhost:5000/users/register', formData);
       console.log('User registered:', response.data);
       navigate('/login');
     } catch (err) {
@@ -28,7 +35,6 @@ const Signup = () => {
       setError(err.response ? err.response.data.message : 'Something went wrong!');
     }
   };
-  
 
   return (
     <div className="flex mt-10 p-4 items-center justify-center bg-gradient-to-r from-white-500 to-indigo-500 margin-0">
@@ -51,9 +57,10 @@ const Signup = () => {
               <label className="block text-gray-700 text-sm font-bold mb-2">Name</label>
               <input
                 type="text"
+                name="name"
                 placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={formData.name}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
                 required
               />
@@ -62,9 +69,10 @@ const Signup = () => {
               <label className="block text-gray-700 text-sm font-bold mb-2">E-mail</label>
               <input
                 type="email"
+                name="email"
                 placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
                 required
               />
@@ -73,9 +81,10 @@ const Signup = () => {
               <label className="block text-gray-700 text-sm font-bold mb-2">Password</label>
               <input
                 type="password"
+                name="password"
                 placeholder="Create a password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
                 required
               />

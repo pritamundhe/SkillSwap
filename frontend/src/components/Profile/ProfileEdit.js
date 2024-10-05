@@ -1,92 +1,106 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { AuthContext } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom'; // Assuming you're using React Router
 
 const ProfileEdit = () => {
-    const { user } = useContext(AuthContext);
-    const [profile, setProfile] = useState({
-        name: 'Om Mali',
-        email: 'om.mali@example.com',
-        workPreference: 'Student',
-        projects: '',
-        workHistory: '',
-        education: '',
-        profilePicture: '' // Field for the profile picture URL
-    });
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const userId = user ? user._id : null;
+  const { user } = useContext(AuthContext);
+  const [profile, setProfile] = useState({
+    name: '',
+    email: '',
+    workPreference: '',
+    projects: '',
+    workHistory: '',
+    education: '',
+    profilePicture: '', // For profile picture URL
+  });
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate(); // To redirect after successful submission
+  const userId = user ? user._id : localStorage.getItem('userId'); // Get user ID from context or localStorage
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setProfile({ ...profile, [name]: value });
-    };
+  // Handler function to update state for form fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      [name]: value,
+    }));
+  };
 
-    const handleFileChange = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const formData = new FormData();
-            formData.append('file', file);
-            try {
-                const response = await axios.post('http://localhost:5000/upload', formData, {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-                setProfile({ ...profile, profilePicture: response.data.url });
-            } catch (error) {
-                console.error('Error uploading image:', error);
-                setError('Error uploading image. Please try again.');
-            }
+  // Handler for uploading profile picture
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const response = await axios.post('http://localhost:5000/upload', formData, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        setProfile((prevProfile) => ({
+          ...prevProfile,
+          profilePicture: response.data.url,
+        }));
+        setSuccess('Image uploaded successfully!');
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        setError('Error uploading image. Please try again.');
+      }
+    }
+  };
+
+  // Form submit handler (same structure as ResourceUpload)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+
+    const userId = localStorage.getItem('userId');
+
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/users/profile`,
+ 
+        { userId, ...profile
+        
         }
-    };
+      );
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
+      if (response.status === 200) {
+        console.log('Profile updated:', response.data);
+        setSuccess('Profile updated successfully!');
+        // Redirect to profile page after successful update
+        navigate('/Profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setError('Error updating profile. Please try again.');
+    }
+  };
+
+  // Fetch profile data on component mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (userId) {
         try {
-            const response = await axios.put(`http://localhost:5000/users/profile/${userId}`, profile, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                },
-            });
-
-            if (response.status === 200) {
-                console.log('Profile updated:', response.data);
-                // Optionally show a success message
-            }
+          const response = await axios.get(`http://localhost:5000/users/profile/${userId}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
+          setProfile(response.data);
         } catch (error) {
-            console.error('Error updating profile:', error);
-            setError('Error updating profile. Please try again.');
-        } finally {
-            setLoading(false);
+          console.error('Error fetching profile:', error);
+          setError('Error fetching profile. Please try again.');
         }
+      }
     };
 
-    useEffect(() => {
-        const fetchProfile = async () => {
-            if (userId) {
-                setLoading(true);
-                try {
-                    const response = await axios.get(`http://localhost:5000/users/profile/${userId}`, {
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                        },
-                    });
-                    setProfile(response.data);
-                } catch (error) {
-                    console.error('Error fetching profile:', error);
-                    setError('Error fetching profile. Please try again.');
-                } finally {
-                    setLoading(false);
-                }
-            }
-        };
-
-        fetchProfile();
-    }, [userId]);
+    fetchProfile();
+  }, [userId]);
 
     return (
         <div className="p-6 shadow-md max-w-7xl mx-auto bg-gray-50">
