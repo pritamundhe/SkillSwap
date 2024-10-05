@@ -1,16 +1,18 @@
 import { useState } from "react";
 import axios from "axios"; // Make sure you have axios installed
 
-const AddSkill = ({ onAddSkill }) => {
+const AddSkill = ({ onAddSkill ,userId}) => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('Other');
     const [level, setLevel] = useState('Beginner');
     const [availableFor, setAvailableFor] = useState('Teach');
 
+    console.log('Adding skill for userId:', userId); // Debug log to ensure userId is passed
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         const newSkill = {
             name,
             description,
@@ -18,16 +20,20 @@ const AddSkill = ({ onAddSkill }) => {
             level,
             availableFor,
         };
-
+    
         try {
-            // Make the API call to add the skill
-            const response = await axios.post('/api/skills', newSkill); // Adjust the endpoint accordingly
+            const response = await axios.post(`http://localhost:5000/skill/addSkill/${userId}`, newSkill, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`, // Ensure token is present
+                },
+            });
             onAddSkill(response.data); // Pass the new skill to the parent
         } catch (error) {
-            console.error('Error adding skill:', error);
-            // Optionally handle errors here (e.g., show a message)
+            console.error('Error adding skill:', error.response ? error.response.data : error.message);
         }
+        
     };
+    
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">

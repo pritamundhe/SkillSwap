@@ -3,22 +3,18 @@ import React, { useState } from 'react'
 import {FiEdit2 } from 'react-icons/fi';
 import SkillEdit from './SkillEdit';
 
-const skills = {
-    skill: "C (Programming Language)",
-    university: "Savitribai Phule Pune University"
-};
-function SkillCard() {
+
+function SkillCard({skill}) {
     const [showedit,setShowedit]=useState(false);
-    console.log(skills.skill);
     return (
         <div className='w-full rounded-sm bg-white p-2.5 flex justify-between'>
             <div>
-            <h1 className='font-semibold text-lg'>{skills.skill}</h1>
+            <h1 className='font-semibold text-lg'>{skill.name}</h1>
             <div className='text-gray-600 flex gap-2.5'>
                 <span class="material-symbols-outlined text-purple-600">
                     school
                 </span>
-                <h4 className='text-md'>{skills.university}</h4>
+                <h4 className='text-md'>{skill.category}</h4>
             </div>
             </div>
             <button className='text-purple-600 hover:text-gray-500' onClick={()=>{setShowedit(true)}}>
@@ -39,7 +35,7 @@ function SkillCard() {
                             >
                                 ✖
                             </button>
-                            <SkillEdit Skill={skills.skill} university={skills.university}/>
+                            <SkillEdit Skill={skill}/>
                         </div>
                     </div>
                 </div>

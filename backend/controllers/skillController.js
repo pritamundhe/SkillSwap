@@ -1,10 +1,11 @@
 import Skill from '../models/Skill.js';
 
-// @desc    Get all skills
-// @access  Public
+// Ensure your Skill model has an addedBy field that references the User model
+// and the User model has a username field
 export const getAllSkills = async (req, res) => {
+    const userId = req.params.userId; // Extract the userId from the request params
     try {
-        const skills = await Skill.find().populate('addedBy', 'username'); // Populate addedBy to get username
+        const skills = await Skill.find({ addedBy: userId }).populate('addedBy', 'username'); // Adjust the query to filter by user
         res.status(200).json(skills);
     } catch (error) {
         console.error("Error fetching skills:", error);
@@ -12,33 +13,51 @@ export const getAllSkills = async (req, res) => {
     }
 };
 
+
+
 // @desc    Add a new skill
 // @access  Private (authenticated users only)
 export const addSkill = async (req, res) => {
-    const { name, description, category, level, availableFor } = req.body;
-
-    // Validate request body
-    if (!name || !description || !level || !availableFor) {
-        return res.status(400).json({ message: 'Please provide all required fields' });
-    }
-
     try {
-        const newSkill = new Skill({
-            name,
-            description,
-            category,
-            level,
-            availableFor,
-            addedBy: req.user.id // Use the ID of the authenticated user
-        });
-
-        const savedSkill = await newSkill.save();
-        res.status(201).json(savedSkill);
+      // Destructure necessary fields from request body
+      const { name, description, category, level, availableFor } = req.body;
+      const { id: uploadedBy } = req.user; // Assuming req.user contains the authenticated user info
+  
+      // Validate required fields
+      if (!name || !description || !level || !availableFor) {
+        return res.status(400).json({ message: 'Please provide all required fields' });
+      }
+  
+      // Create a new skill instance
+      const newSkill = new Skill({
+        name,
+        description,
+        category,
+        level,
+        availableFor,
+        addedBy: uploadedBy, // Using the authenticated user ID
+      });
+  
+      // Save the skill to the database
+      const savedSkill = await newSkill.save();
+  
+      // Update the User's skills offered array
+      await User.findByIdAndUpdate(
+        uploadedBy,
+        { $push: { skillsOffered: savedSkill._id } }, // Push the new skill ID into the skills offered array
+        { new: true } // Return the updated user document
+      );
+  
+      return res.status(201).json({
+        message: 'Skill added successfully!',
+        skill: savedSkill,
+      });
     } catch (error) {
-        console.error("Error adding skill:", error);
-        res.status(500).json({ message: 'Server error' });
+      console.error('Error adding skill:', error);
+      return res.status(500).json({ error: error.message });
     }
-};
+  };
+
 
 // @desc    Update a skill
 // @access  Private (authenticated users only)
