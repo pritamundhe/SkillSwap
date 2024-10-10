@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import image from '../assets/images/image.jpg';
 import logo1 from '../assets/images/logo1.png'
 import logo2 from '../assets/images/logo2.png'
@@ -17,7 +18,9 @@ function Home() {
             <p className="mt-4 text-gray-600">Explore new subjects, acquire valuable skills, and shape your knowledge at your own pace, all from the comfort of your digital classroom.</p>
             <div className="mt-8 space-x-4">
               <button className="text-white bg-purple-600 hover:bg-white border border-purple-600 hover:text-purple-600 px-4 py-1.5">Explore More</button>
-              <button className="text-gray-600 bg-gray hover:bg-white border border-purple-600 hover:text-purple-600 px-4 py-1.5">Financial Aid</button>
+              <Link to="/Pricing">
+              <button className="text-gray-600 bg-gray hover:bg-white border border-purple-600 hover:text-purple-600 px-4 py-1.5">Pricing</button>
+              </Link>
             </div>
           </div>
           <div className="md:w-1/2 mt-8 md:mt-0">
