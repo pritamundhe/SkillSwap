@@ -14,7 +14,18 @@ export const getAllSkills = async (req, res) => {
     }
 };
 
+export const getSkills = async (req, res) => {
+    
+    try {
+        const skills = await Skill.find(); // Adjust the query to filter by user
+        res.status(200).json(skills);
+    } catch (error) {
+        console.error("Error fetching skills:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
+// }
 export const addSkill = async (req, res) => {
     const { name, description, category, level, availableFor, addedBy } = req.body;
 
@@ -91,26 +102,25 @@ export const updateSkill = async (req, res) => {
     }
 };
 
-// @desc    Delete a skill
-// @access  Private (authenticated users only)
+
 export const deleteSkill = async (req, res) => {
+    const { id } = req.params; // Skill ID from URL
+    const { userId } = req.body; // User ID from request body
+
+    console.log(`Received request to delete skill with ID: ${id} for user ID: ${userId}`);
+
     try {
-        const skill = await Skill.findById(req.params.id);
+        const skill = await Skill.findOneAndDelete({ _id: id, addedBy: userId }); // Check against addedBy
 
-        // Check if the skill exists
         if (!skill) {
-            return res.status(404).json({ message: 'Skill not found' });
+            console.log("Skill not found or unauthorized for deletion.");
+            return res.status(404).json({ msg: "Skill not found or unauthorized" });
         }
-
-        // Check if the user is the one who added the skill
-        if (skill.addedBy.toString() !== req.user.id) {
-            return res.status(403).json({ message: 'Not authorized' });
-        }
-
-        await skill.remove();
-        res.status(200).json({ message: 'Skill removed' });
-    } catch (error) {
-        console.error("Error deleting skill:", error);
-        res.status(500).json({ message: 'Server error' });
+        
+        res.json({ msg: "Skill deleted successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: "Server error" });
     }
 };
+

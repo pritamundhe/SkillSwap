@@ -33,7 +33,7 @@ const Navbar = () => {
         <div className="hidden md:flex flex-grow justify-center items-center">
           <ul className="flex space-x-8">
             <li><Link to="/" className="text-gray-600 hover:text-purple-600">Home</Link></li>
-            <li><Link to="/freebie" className="text-gray-600 hover:text-purple-600">Freebie</Link></li>
+            <li><Link to="/AllSkills" className="text-gray-600 hover:text-purple-600">Skills</Link></li>
             <li><Link to="/AdminDashboard" className="text-gray-600 hover:text-purple-600">Admin</Link></li>
             <li><Link to="/ChatApp" className="text-gray-600 hover:text-purple-600">Messages</Link></li>
           </ul>

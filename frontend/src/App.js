@@ -29,6 +29,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import ResourcePage from './pages/ResourcePage';
 import NewSkillCard from './components/Skills/NewSkillCard';
 import NewSkillList from './components/Skills/NewSkillList';
+import AllSkills from './components/Skills/AllSkills'
 
 function App() {
   return (
@@ -59,6 +60,7 @@ function App() {
           <Route path="/SkillList" element={<SkillList />} />
           <Route path="/NewSKillCard" element={<NewSkillCard />} />
           <Route path="/NewSKillList" element={<NewSkillList />} />
+          <Route path="/AllSkills" element={<AllSkills />} />
           
 
           <Route path="/ProfileEdit" element={<ProfileEdit />} />

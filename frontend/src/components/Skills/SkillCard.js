@@ -6,6 +6,7 @@ import SkillEdit from './SkillEdit';
 
 function SkillCard({skill}) {
     const [showedit,setShowedit]=useState(false);
+    
     return (
         <div className='w-full rounded-sm bg-white p-2.5 flex justify-between'>
             <div>
@@ -45,5 +46,3 @@ function SkillCard({skill}) {
 }
 
 export default SkillCard;
-
-
