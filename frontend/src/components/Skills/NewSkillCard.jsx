@@ -1,8 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import { FiTrash2 } from 'react-icons/fi';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const NewSkillCard = ({ skill, userId, onDelete }) => {
+    const navigate = useNavigate(); // Initialize useNavigate
+
     const handleDelete = async () => {
         try {
             const response = await axios.delete(`http://localhost:5000/skill/deleteskill/${skill._id}`, {
@@ -17,17 +20,16 @@ const NewSkillCard = ({ skill, userId, onDelete }) => {
     };
 
     const handleAddResources = () => {
-        // Logic to add resources can go here
-        // For example, navigate to the add resources page or show a modal
+        // Navigate to the SkillPage or appropriate resource addition page
         console.log(`Adding resources for skill: ${skill.name}`);
-        // You could use `useNavigate` from `react-router-dom` to redirect to the add resources page
+        navigate('/SkillPage'); // Change this to the correct path for adding resources
     };
 
     return (
         <div className="text-black rounded-sm overflow-hidden shadow-lg transform transition-all hover:scale-102 border border-blue-500 h-80 w-100 relative bg-white">
             <div className="absolute bottom-5 right-4 h-10 w-10 bg-blue-600 text-white flex items-center justify-center rounded-sm hover:bg-blue-400"
                 onClick={handleDelete}>
-                <FiTrash2 size={120} />
+                <FiTrash2 size={24} /> {/* Adjusted size */}
             </div>
             <div className="relative">
                 {/* Image - using a dummy image if no image is provided */}
