@@ -1,26 +1,39 @@
-import React, { useState } from 'react'
-
-import {FiEdit2 } from 'react-icons/fi';
+import React, { useState } from 'react';
+import { FiEdit2 } from 'react-icons/fi';
 import SkillEdit from './SkillEdit';
 
+function SkillCard({ skill }) {
+    const [showedit, setShowedit] = useState(false);
 
-function SkillCard({skill}) {
-    const [showedit,setShowedit]=useState(false);
-    
     return (
-        <div className='w-full rounded-sm bg-white p-2.5 flex justify-between'>
-            <div>
-            <h1 className='font-semibold text-lg'>{skill.name}</h1>
-            <div className='text-gray-600 flex gap-2.5'>
-                <span class="material-symbols-outlined text-purple-600">
-                    school
-                </span>
-                <h4 className='text-md'>{skill.category}</h4>
+        <div className="w-full rounded-sm bg-white p-2.5 flex justify-between items-center">
+            {/* Skill details with dummy image */}
+            <div className="flex items-center gap-4">
+                {/* Dummy Image */}
+                <img 
+                    src="https://via.placeholder.com/50" 
+                    alt={`${skill.name} skill`} 
+                    className="w-12 h-12 object-cover rounded-full" 
+                />
+
+                {/* Skill information */}
+                <div>
+                    <h1 className="font-semibold text-lg">{skill.nme}</h1>
+                    <div className="text-gray-600 flex gap-2.5 items-center">
+                        <span className="material-symbols-outlined text-purple-600">
+                            school
+                        </span>
+                        <h4 className="text-md">{skill.category}</h4>
+                    </div>
+                </div>
             </div>
-            </div>
-            <button className='text-purple-600 hover:text-gray-500' onClick={()=>{setShowedit(true)}}>
-            <FiEdit2 size={20} />
+
+            {/* Edit Button */}
+            <button className="text-purple-600 hover:text-gray-500" onClick={() => { setShowedit(true); }}>
+                <FiEdit2 size={20} />
             </button>
+
+            {/* Edit Modal */}
             {showedit && (
                 <div>
                     {/* Background Blur */}
@@ -36,13 +49,13 @@ function SkillCard({skill}) {
                             >
                                 ✖
                             </button>
-                            <SkillEdit Skill={skill}/>
+                            <SkillEdit skill={skill} />
                         </div>
                     </div>
                 </div>
             )}
         </div>
-    )
+    );
 }
 
 export default SkillCard;

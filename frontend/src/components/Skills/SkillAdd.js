@@ -1,133 +1,175 @@
-import { useState, useContext } from "react";
-import axios from "axios"; 
-import { AuthContext } from "../../contexts/AuthContext"; 
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const AddSkill = ({ onAddSkill }) => {
-    const { user } = useContext(AuthContext); 
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const [category, setCategory] = useState('Other');
-    const [level, setLevel] = useState('Beginner');
-    const [availableFor, setAvailableFor] = useState('Teach');
-    const [error, setError] = useState(''); 
-    const [success, setSuccess] = useState(''); 
-    const [loading, setLoading] = useState(false); // New loading state
+const AddSkill = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    description: '',
+    category: 'Other',
+    level: 'Beginner',
+  });
+  const [file, setFile] = useState(null);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const navigate = useNavigate();
 
-        if (!user) {
-            setError('You must be logged in to add a skill.');
-            return;
-        }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
-        const newSkill = {
-            name,
-            description,
-            category,
-            level,
-            availableFor,
-            addedBy: user._id,
-        };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
-        try {
-            setLoading(true); // Set loading state
-            const response = await axios.post(`http://localhost:5000/skill/addSkill`, newSkill); 
-            onAddSkill(response.data); 
-            setSuccess('Skill added successfully!'); 
-            // Clear form fields
-            setName('');
-            setDescription('');
-            setCategory('Other');
-            setLevel('Beginner');
-            setAvailableFor('Teach');
-            setError(''); // Clear error message on success
-        } catch (error) {
-            console.error('Error adding skill:', error);
-            setError('Error adding skill. Please try again.'); 
-        } finally {
-            setLoading(false); // Reset loading state
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
 
-    return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            {error && <div className="text-red-600">{error}</div>} 
-            {success && <div className="text-green-600">{success}</div>} 
-            <div>
-                <label className="block text-sm font-medium text-gray-700">Skill Name</label>
-                <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                />
-            </div>
+    const uploadedBy = localStorage.getItem('userId');
 
-            <div>
-                <label className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                />
-            </div>
+    try {
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('description', formData.description);
+      data.append('category', formData.category);
+      data.append('level', formData.level);
+      data.append('file', file);
+      data.append('addedBy', uploadedBy);
 
-            <div>
-                <label className="block text-sm font-medium text-gray-700">Category</label>
-                <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                >
-                    <option value="Technical">Technical</option>
-                    <option value="Creative">Creative</option>
-                    <option value="Business">Business</option>
-                    <option value="Personal Development">Personal Development</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
+      const response = await axios.post('http://localhost:5000/skill/addSkill', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-            <div>
-                <label className="block text-sm font-medium text-gray-700">Level</label>
-                <select
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                >
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advanced">Advanced</option>
-                </select>
-            </div>
+      setSuccess('Resource uploaded successfully!');
+      setFormData({
+        name: '',
+        description: '',
+        category: 'Other',
+        level: 'Beginner',
+      });
+      setFile(null);
+      navigate('/newSkillList');
+    } catch (err) {
+      setError('Failed to upload resource');
+    }
+  };
 
-            <div>
-                <label className="block text-sm font-medium text-gray-700">Available For</label>
-                <select
-                    value={availableFor}
-                    onChange={(e) => setAvailableFor(e.target.value)}
-                    required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
-                >
-                    <option value="Teach">Teach</option>
-                    <option value="Learn">Learn</option>
-                </select>
-            </div>
+  const { name, description, category, level } = formData;
 
-            <div className="flex justify-end">
-                <button 
-                    type="submit" 
-                    className={`bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`} 
-                    disabled={loading} // Disable button when loading
-                >
-                    {loading ? 'Adding...' : 'Add Skill'}
-                </button>
-            </div>
-        </form>
-    );
+  return (
+    <div className="max-w-xl mx-auto mt-10 p-8 bg-white rounded-lg shadow-md">
+      <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">Add New Skill</h2>
+
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {success && <p className="text-green-500 mb-4">{success}</p>}
+
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+        {/* Resource Title */}
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+            Skill Title
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={name}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out"
+            placeholder="Enter the resource title"
+            required
+          />
+        </div>
+
+        {/* Resource Description */}
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+            Skill Description
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={description}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out"
+            placeholder="Provide a brief description"
+            rows="4"
+            required
+          />
+        </div>
+
+        {/* Upload File */}
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="file">
+            Upload File
+          </label>
+          <input
+            type="file"
+            id="file"
+            name="file"
+            onChange={handleFileChange}
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out"
+            required
+          />
+        </div>
+
+        {/* Category Selector */}
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">
+            Category
+          </label>
+          <select
+            id="category"
+            name="category"
+            value={category}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out"
+          >
+            <option value="Skill">Skill</option>
+            <option value="Webinar">Webinar</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        {/* Access Level */}
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="level">
+            Level
+          </label>
+          <select
+            id="level"
+            name="level"
+            value={level}
+            onChange={handleChange}
+            className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none transition duration-300 ease-in-out"
+          >
+            <option value="Public">Public</option>
+            <option value="Private">Private</option>
+            <option value="Beginner">Beginner</option>
+          </select>
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Upload Resource
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default AddSkill;

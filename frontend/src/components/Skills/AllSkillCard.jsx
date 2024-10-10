@@ -26,7 +26,7 @@ const AllSkillCard = ({skill}) => {
             <div className="p-4 relative bg-gradient-to-r min-h-screen from-gray-200 to-gray-50 h-full">
 
                 <h2 className="text-xl font-semibold mb-2">
-                    {skill.name}
+                    {skill.nme}
                 </h2>
                 <p className="text-gray-400 mb-4 text-sm">
                     {skill.description}
