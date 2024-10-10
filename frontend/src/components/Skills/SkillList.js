@@ -37,6 +37,7 @@ const SkillList = () => {
                 } catch (err) {
                     console.error("Error fetching skills:", err);
                     setError("Failed to load skills. Please try again later.");
+                    
                 } finally {
                     setLoading(false); // Set loading to false once the fetch is complete
                 }
@@ -57,8 +58,14 @@ const SkillList = () => {
             setSkills([...skills, response.data]); // Add the newly added skill to the list
             setShowModal(false); // Close the modal after adding
         } catch (error) {
-            console.error("Error adding skill:", error);
-            setError("Failed to add skill. Please try again.");
+
+            const response = await axios.get(`http://localhost:5000/skill/getAllSkills/${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`, // Authorization header
+                },
+            });
+            setSkills(response.data); 
+        
         }
     };
 
