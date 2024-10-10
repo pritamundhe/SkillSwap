@@ -1,8 +1,15 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const AllSkillCard = ({skill}) => {
+    const navigate = useNavigate();
+    const handleCardClick = () => {
+        navigate(`/skill/${skill._id}`); // Navigate to skill details page with skill ID
+      };
   return (
-    <div className=" text-black rounded-sm overflow-hidden shadow-purple-300 shadow-lg transform transition-all hover:scale-102 border border-gray-500 h-80 w-64 relative bg-white">
+
+    <div className=" text-black rounded-sm overflow-hidden shadow-purple-300 shadow-lg transform transition-all hover:scale-102 border border-gray-500 h-80 w-64 relative bg-white
+     " onClick={handleCardClick}>
             
             <div className="relative">
                 {/* Image */}

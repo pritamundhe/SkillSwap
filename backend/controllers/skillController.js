@@ -131,3 +131,14 @@ export const deleteSkill = async (req, res) => {
     }
 };
 
+export const skillDetails=async (req,res)=>{
+    const skillId = req.params.skillId; // Extract the userId from the request params
+    try {
+        const skills = await Skill.findOne({ _id: skillId }) // Adjust the query to filter by user
+        res.status(200).json(skills);
+    } catch (error) {
+        console.error("Error fetching skills:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+
+};

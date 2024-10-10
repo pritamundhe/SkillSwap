@@ -40,6 +40,7 @@ const NewSkillList = () => {
         <h2 className="text-2xl font-bold">Skills</h2>
         
       </div>
+        
       <div className='flex gap-12  flex-wrap my-5 justify-center bg-gradient-to-r min-h-screen from-purple-100 to-purple-50 rounded-sm py-5'>
         {skills.map((skill, index) => (
           <AllSkillCard key={index} skill={skill} userId={userId} /> // Pass each skill to SkillCard

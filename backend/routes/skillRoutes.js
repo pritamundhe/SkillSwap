@@ -1,6 +1,9 @@
 import express from 'express';
-import { getAllSkills , addSkill,deleteSkill,getSkills} from '../controllers/skillController.js';
+
 import upload from '../middleware/uploadMiddleware.js'
+
+import { getAllSkills , addSkill,deleteSkill,getSkills,skillDetails} from '../controllers/skillController.js';
+
 
 const router = express.Router();
 
@@ -9,6 +12,7 @@ router.get("/getAllSkills/:userId", getAllSkills);
 router.get("/getSkills", getSkills);
 router.post('/addSkill',upload, addSkill);
 router.delete('/deleteskill/:id', deleteSkill);
+router.get("/skillDetails/:skillId",skillDetails)
 
 
 export default router;

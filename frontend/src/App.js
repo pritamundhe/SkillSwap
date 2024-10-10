@@ -29,7 +29,10 @@ import { AuthProvider } from './contexts/AuthContext';
 import ResourcePage from './pages/ResourcePage';
 import NewSkillCard from './components/Skills/NewSkillCard';
 import NewSkillList from './components/Skills/NewSkillList';
-import AllSkills from './components/Skills/AllSkills'
+import AllSkills from './components/Skills/AllSkills';
+import Pricing from './components/Common/Pricing';
+import SkillPage from './components/Skills/SkillPage'
+
 
 function App() {
   return (
@@ -73,6 +76,8 @@ function App() {
           <Route path='/ProfileEdit' element={<ProfileEdit/>}/>
           <Route path='/Resource' element={<ResourcePage/>}/>
           <Route path='/ResourceList' element={<ResourceList/>}/>
+          <Route path='/Pricing' element={<Pricing />}/>
+          <Route path="/skill/:skillId" element={<SkillPage />} />
           {/* Add other routes here */}
         </Routes>
         <Footer />
