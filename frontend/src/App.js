@@ -27,6 +27,8 @@ import SkillManagement from './components/Admin/SkillManagement';
 import Reports from './components/Admin/Reports';
 import { AuthProvider } from './contexts/AuthContext';
 import ResourcePage from './pages/ResourcePage';
+import NewSkillCard from './components/Skills/NewSkillCard';
+import NewSkillList from './components/Skills/NewSkillList';
 
 function App() {
   return (
@@ -55,6 +57,9 @@ function App() {
           {/* Route for Skills */}
           <Route path="/SkillAdd" element={<AddSkill />} />
           <Route path="/SkillList" element={<SkillList />} />
+          <Route path="/NewSKillCard" element={<NewSkillCard />} />
+          <Route path="/NewSKillList" element={<NewSkillList />} />
+          
 
           <Route path="/ProfileEdit" element={<ProfileEdit />} />
           <Route path='/ChatApp' element={<ChatApp/>}/>
