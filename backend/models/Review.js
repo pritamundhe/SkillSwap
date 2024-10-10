@@ -1,14 +1,15 @@
 import mongoose from 'mongoose';
 
+
 const ReviewSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId, // Reference to the user who wrote the review
     ref: 'User',
     required: true,
   },
-  resource: {
+  Skill: {
     type: mongoose.Schema.Types.ObjectId, // Reference to the resource or webinar being reviewed
-    ref: 'Resource', // Could be 'Webinar' if needed; can adapt based on your requirements
+    ref: 'Skill', // Could be 'Webinar' if needed; can adapt based on your requirements
     required: true,
   },
   rating: {
@@ -32,7 +33,7 @@ const ReviewSchema = new mongoose.Schema({
 });
 
 // Index for efficient querying
-ReviewSchema.index({ resource: 1, user: 1 }, { unique: true }); // Ensure a user can only review a resource once
+// Ensure a user can only review a resource once
 
 const Review = mongoose.model('Review', ReviewSchema);
 

@@ -61,6 +61,7 @@ export const loginUser = async (req, res) => {
       jwtToken,
       email: existingUser.email,
       name: existingUser.name,
+      Id:existingUser._id
     });
   } catch (error) {
     console.error('Login error:', error); // Log error for debugging

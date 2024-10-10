@@ -33,6 +33,12 @@ const SkillSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Resource',
   },
+  reviews: [
+    {
+      type: mongoose.Schema.Types.ObjectId,  // Reference to individual reviews
+      ref: 'Review' // Reference the Review schema
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now,    
