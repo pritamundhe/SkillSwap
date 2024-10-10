@@ -27,7 +27,8 @@ const SkillSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String,
+    data: Buffer,        // Storing file in MongoDB as binary data
+    contentType: String,
   },
   resources:{
     type: mongoose.Schema.Types.ObjectId,

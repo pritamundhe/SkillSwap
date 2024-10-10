@@ -103,4 +103,4 @@ const NewSkillList = () => {
   )
 }
 
-export default NewSkillList
+export default NewSkillList;
