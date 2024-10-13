@@ -14,7 +14,7 @@ const AllSkillCard = ({skill}) => {
             <div className="relative">
                 {/* Image */}
                 <img
-                    src=""
+                    src={skill.image}
                     alt="Skill image"
                     className="w-full  object-cover object-center transition-transform duration-300 ease-in-out"
                     style={{ width: "320px", height: "160px" }}
@@ -26,7 +26,7 @@ const AllSkillCard = ({skill}) => {
             <div className="p-4 relative bg-gradient-to-r min-h-screen from-gray-200 to-gray-50 h-full">
 
                 <h2 className="text-xl font-semibold mb-2">
-                    {skill.nme}
+                    {skill.name}
                 </h2>
                 <p className="text-gray-400 mb-4 text-sm">
                     {skill.description}

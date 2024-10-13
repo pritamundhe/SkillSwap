@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  profilePic: {
+  image: {
     // Storing profile picture as binary data directly in MongoDB
     type: String,
   },

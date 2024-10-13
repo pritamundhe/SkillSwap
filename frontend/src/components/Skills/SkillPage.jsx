@@ -1,28 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
 import axios from 'axios';
-import ReviewForm from '../Reviews/ReviewForm';
 import ReviewList from '../Reviews/ReviewList';
 
 const SkillPage = () => {
   const { skillId } = useParams();
+  const navigate = useNavigate(); // Initialize useNavigate hook
   const [skill, setSkill] = useState(null);
+  const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Fetch skill details and resources
   useEffect(() => {
-    const fetchSkillPage = async () => {
+    const fetchSkillData = async () => {
+      setLoading(true); // Start loading
       try {
-        const response = await axios.get(`http://localhost:5000/skill/SkillDetails/${skillId}`);
-        setSkill(response.data);
+        // Fetch skill details
+        const skillResponse = await axios.get(`http://localhost:5000/skill/SkillDetails/${skillId}`);
+        setSkill(skillResponse.data);
+
+        // Fetch related resources by skill ID
+        const resourceResponse = await axios.get(`http://localhost:5000/resource/${skillId}`);
+        setResources(resourceResponse.data); // Assuming API response contains the list of resources
+
       } catch (err) {
-        setError("Failed to load skill details. Please try again later.");
+        console.error(err); // Log the error for debugging
+        setError("Failed to load skill details or resources. Please try again later.");
       } finally {
-        setLoading(false);
+        setLoading(false); // End loading
       }
     };
 
-    fetchSkillPage();
+    fetchSkillData();
   }, [skillId]);
 
   // Callback function to update reviews after submission
@@ -33,8 +43,13 @@ const SkillPage = () => {
     }));
   };
 
+  // Handler to navigate to ResourcePage with resourceId
+  const handleResourceClick = (resourceId) => {
+    navigate(`/ResourcePage/${resourceId}`); // Navigate to the resource page using resourceId
+  };
+
   if (loading) {
-    return <p>Loading...</p>;
+    return <p>Loading...</p>; // You might replace this with a spinner component
   }
 
   if (error) {
@@ -60,10 +75,21 @@ const SkillPage = () => {
 
         <div className="bg-gray-100 p-4 rounded-lg">
           <h2 className="text-xl font-semibold mb-2">Resources</h2>
+
+          {/* Display resources in a list */}
           <ul className="list-disc list-inside space-y-1">
-            {skill.resources && skill.resources.length > 0 ? (
-              skill.resources.map((resource, index) => (
-                <li key={index}>{resource.name}</li>
+            {resources.length > 0 ? (
+              resources.map((resource) => (
+                <li
+                  key={resource._id}
+                  className="text-blue-600 cursor-pointer" // Styling for clickable text
+                  onClick={() => handleResourceClick(resource._id)} // Navigate on click
+                  role="button" // Adding role for accessibility
+                  tabIndex={0} // Making it keyboard accessible
+                  onKeyDown={(e) => e.key === 'Enter' && handleResourceClick(resource._id)} // Handle Enter key for accessibility
+                >
+                  {resource.title}
+                </li>
               ))
             ) : (
               <li>No resources available</li>
@@ -80,12 +106,9 @@ const SkillPage = () => {
           </div>
         </div>
 
-        {/* Review Form */}
-        {/*  */}
-
-        {/* Reviews Section */}
+        {/* Review Section */}
         <div className="mt-6">
-          <ReviewList skill={skill} skillId={skillId} onReviewAdded={handleReviewAdded}/>
+          <ReviewList skill={skill} skillId={skillId} onReviewAdded={handleReviewAdded} />
         </div>
       </div>
     </div>

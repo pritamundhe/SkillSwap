@@ -8,8 +8,8 @@ import Register from './components/Auth/Signup';
 import ProfileView from './components/Profile/ProfileView';
 
 import ResourceUpload from './components/Resources/ResourceUpload';
-import ResourceList from './components/Resources/ResourceList';
 
+import ResourceList from './components/Resources/Resource';
 import ReviewList from './components/Reviews/ReviewList';
 import ReviewCard from './components/Reviews/Review';
 import ReviewForm from './components/Reviews/ReviewForm';
@@ -32,6 +32,8 @@ import NewSkillList from './components/Skills/NewSkillList';
 import AllSkills from './components/Skills/AllSkills';
 import Pricing from './components/Common/Pricing';
 import SkillPage from './components/Skills/SkillPage'
+import WebinarPage from './components/Webinars/WebinarCard';
+import Joinwebinar from './components/Webinars/Webinar';
 
 
 function App() {
@@ -53,7 +55,7 @@ function App() {
           <Route path="/Register" element={<Register/>} />
           {/* Route for Resources */}
           <Route path="/ResourceList" element={<ResourceList />} />
-          <Route path="/ResourceUpload" element={<ResourceUpload />} />
+          <Route path="/ResourceUpload/:skillId" element={<ResourceUpload />} />
           {/* Route for Reviews */}
           <Route path="/ReviewCard" element={<ReviewCard />} />
           <Route path="/ReviewList" element={<ReviewList />} />
@@ -64,6 +66,8 @@ function App() {
           <Route path="/NewSKillCard" element={<NewSkillCard />} />
           <Route path="/NewSKillList" element={<NewSkillList />} />
           <Route path="/AllSkills" element={<AllSkills />} />
+          <Route path="/webinar" element={<WebinarPage/>} />
+          <Route path="/join" element={<Joinwebinar/>} />
           
 
           <Route path="/ProfileEdit" element={<ProfileEdit />} />
@@ -74,8 +78,8 @@ function App() {
           <Route path='/SkillManagement' element={<SkillManagement/>}/>
           <Route path='/Reports' element={<Reports/>}/>
           <Route path='/ProfileEdit' element={<ProfileEdit/>}/>
-          <Route path='/Resource' element={<ResourcePage/>}/>
-          <Route path='/ResourceList' element={<ResourceList/>}/>
+          <Route path='/ResourcePage/:resourceId' element={<ResourcePage/>}/>
+          {/* <Route path='/ResourceList' element={<ResourceList/>}/> */}
           <Route path='/Pricing' element={<Pricing />}/>
           <Route path="/skill/:skillId" element={<SkillPage />} />
           {/* Add other routes here */}

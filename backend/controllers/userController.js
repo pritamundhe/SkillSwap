@@ -2,6 +2,73 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs'; // Corrected the import to 'bcrypt'
 
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { name, email, file } = req.body; // Destructure image directly
+
+    const userId = req.params.userId; // Ensure correct extraction of userId
+    const image = req.file.path;
+    // Optionally validate the input data here
+    if (!name || !email) {
+      return res.status(400).json({ message: 'Name and email are required.' });
+    }
+
+    const user = await User.findById(userId); // Use findById for clarity
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Update the user's information
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        name,
+        email,
+        image, // This should handle image URL or path if uploaded
+      },
+      { new: true, runValidators: true } // Return the updated user and run validators
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(updatedUser); // Return the updated user information
+
+  } catch (error) {
+    console.error('Error updating profile:', error); // Log the error for debugging
+    res.status(500).json({ message: 'Error updating profile', error });
+  }
+};
+
+
+export const getUserProfile = async (req, res) => {
+  const userId = req.params.userId; // Get the userId from the request parameters
+
+  try {
+    // Fetch the user including the image and populate skills if necessary
+    const user = await User.findById(userId).select('name email role image skillsOffered reviews createdAt updatedAt'); // Select fields you want to return
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // If the image data needs conversion, you can do it here.
+    // Example: Check if image field exists and format it
+    if (user.image && user.image.data) {
+      user.image = `data:${user.image.contentType};base64,${user.image.data.toString('base64')}`;
+    }
+
+    // Return the user's full profile including the image and skills
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 /**
  * Register user
  */
@@ -74,58 +141,5 @@ export const logoutUser = (req, res) => {
   res.status(200).json({ message: 'Logout successful' });
 };
 
-export const getUserProfile = async (req, res) => {
-  const userId = req.params.userId; // Get the userId from the request parameters
 
-  try {
-      const user = await User.findById(userId); // Fetch the user from the database
-      if (!user) {
-          return res.status(404).json({ message: 'User not found' });
-      }
-      res.status(200).json(user); // Send the user data as response
-  } catch (error) {
-      console.error('Error fetching user profile:', error);
-      res.status(500).json({ message: 'Server error' });
-  }
-};
 
-export const updateUserProfile = async (req, res) => {
-  try {
-    const { userId, name, email, workPreference, projects, workHistory, education } = req.body;
-    
-    // Handling profilePic if included
-    let profilePic = req.body.profilePic;
-
-    // Optionally validate the input data here
-    const user = await User.findOne({ _id: userId });
-    
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Update the user's information, including profilePic if provided
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      {
-        name,
-        email,
-        workPreference,
-        projects,
-        workHistory,
-        education,
-        ...(profilePic && { profilePic }),  // Only update profilePic if it's provided
-      },
-      { new: true, runValidators: true } // Return the updated user and run validators
-    );
-
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.status(200).json(updatedUser);  // Return the updated user information
-
-  } catch (error) {
-    console.error('Error updating profile:', error);  // Log the error for debugging
-    res.status(500).json({ message: 'Error updating profile', error });
-  }
-};

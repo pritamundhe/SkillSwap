@@ -19,7 +19,7 @@ const SkillSchema = new mongoose.Schema({
   level: {
     type: String,        
     enum: ['Beginner', 'Intermediate', 'Advanced'],
-    required: true,
+  
   },
   addedBy: {
     type: mongoose.Schema.Types.ObjectId, 
@@ -27,8 +27,7 @@ const SkillSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    data: Buffer,        // Storing file in MongoDB as binary data
-    contentType: String,
+    type: String,
   },
   resources:{
     type: mongoose.Schema.Types.ObjectId,

@@ -25,43 +25,41 @@ export const getSkills = async (req, res) => {
     }
 };
 
-// }
 export const addSkill = async (req, res) => {
     const { name, description, category, level, addedBy } = req.body;
 
     // Log the request body and file for debugging
     console.log('Request Body:', req.body);
-    console.log('File:', req.file); // Make sure this isn't undefined
+    console.log('File:', req.file); // This should log the file details
 
-    // Check if the image file is provided in the request
-
+    // Check if the file was uploaded
+    if (!req.file) {
+        return res.status(400).json({ error: 'No image file uploaded' });
+    }
 
     try {
-        // Create a new skill with the image data as a buffer
+        // Create a new skill with the image path
         const newSkill = new Skill({
             name,
             description,
             category,
             level,
-            image: {
-                data: req.file.buffer, // Store file as Buffer
-                contentType: req.file.mimetype // Store MIME type
-            },
+            image: req.file.path, // Save the file path (or buffer if needed)
             addedBy, // Use the ID of the authenticated user
         });
 
+        // Save the new skill to the database
         const savedSkill = await newSkill.save();
 
         // Update the user's skillsOffered array
         await User.findByIdAndUpdate(
             addedBy,
-            { $push: { skillsOffered: savedSkill._id } }, // Corrected this part
+            { $push: { skillsOffered: savedSkill._id } }, // Add the skill to the user's list
             { new: true }
         );
 
         // Respond with the saved skill
         res.status(201).json(savedSkill);
-
     } catch (error) {
         console.error('Error adding skill:', error);
         return res.status(500).json({ error: error.message });

@@ -15,6 +15,7 @@ const ProfileView = () => {
             try {
                 const response = await axios.get(`http://localhost:5000/users/profile/${userId}`);
                 setProfileData(response.data);
+                console.log(response)
             } catch (error) {
                 console.error('Error fetching profile data:', error);
             }
@@ -37,7 +38,7 @@ const ProfileView = () => {
                 <h2 className="text-2xl font-semibold text-center mb-4">Profile Details</h2>
                 <img
                     className="w-32 h-32 rounded-full object-cover mx-auto mb-4 shadow-lg"
-                    src={profileData.profilePic?.data ? `data:${profileData.profilePic.contentType};base64,${profileData.profilePic.data.toString('base64')}` : 'https://via.placeholder.com/128'}
+                    src={profileData.image}
                     alt={`Profile picture of ${profileData.name}`}
                 />
                 <div className="text-center">

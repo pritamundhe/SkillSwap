@@ -1,46 +1,29 @@
-// uploadMiddleware.js
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-// Handle file path issues in ES module
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Ensure the images directory exists, create it if not
-const imagesDir = path.join(__dirname, 'images');
-if (!fs.existsSync(imagesDir)) {
-    fs.mkdirSync(imagesDir, { recursive: true }); // Creates the directory if it doesn't exist
-}
-
-// Configure multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, imagesDir);  // Save files in the 'images' directory
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + "_" + Date.now() + path.extname(file.originalname));
-    }
+// Cloudinary configuration
+cloudinary.config({
+    cloud_name: 'dqmrrds7b',
+    api_key: '134959874854179',
+    api_secret: '3vmDWcttNc4j0a56BgnUa0SA3kg',
 });
 
-// File filter to only allow certain file types (optional)
-const fileFilter = (req, file, cb) => {
-    const fileTypes = /jpeg|jpg|png|pdf|gif/; // Allowed file types
-    const extName = fileTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimeType = fileTypes.test(file.mimetype);
+// Cloudinary storage configuration for multer
+const cloudinaryStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'uploads',  // Name of the folder where files will be stored in Cloudinary
+        allowed_formats: ['jpg', 'png', 'jpeg', 'gif'],  // Allowed file types
+        public_id: (req, file) => {
+            return file.fieldname + '_' + Date.now();  // Custom file name in Cloudinary
+        },
+    },
+});
 
-    if (extName && mimeType) {
-        return cb(null, true); // Accept the file
-    } else {
-        cb(new Error('Only images are allowed')); // Reject the file
-    }
-};
-
-// Multer middleware for handling single file upload
+// Multer middleware to handle single file upload using Cloudinary storage
 const upload = multer({
-    storage: storage,
-    fileFilter: fileFilter // Include the file filter
-}).single('file'); // 'file' is the field name in the form
+    storage: cloudinaryStorage,  // Use Cloudinary for file storage
+}).single('file');  // 'image' is the field name used in the form
 
 export default upload;

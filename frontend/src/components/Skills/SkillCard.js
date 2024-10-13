@@ -11,14 +11,14 @@ function SkillCard({ skill }) {
             <div className="flex items-center gap-4">
                 {/* Dummy Image */}
                 <img 
-                    src="https://via.placeholder.com/50" 
+                    src={skill.image}
                     alt={`${skill.name} skill`} 
                     className="w-12 h-12 object-cover rounded-full" 
                 />
 
                 {/* Skill information */}
                 <div>
-                    <h1 className="font-semibold text-lg">{skill.nme}</h1>
+                    <h1 className="font-semibold text-lg">{skill.name}</h1>
                     <div className="text-gray-600 flex gap-2.5 items-center">
                         <span className="material-symbols-outlined text-purple-600">
                             school

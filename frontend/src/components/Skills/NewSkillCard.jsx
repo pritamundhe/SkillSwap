@@ -20,9 +20,8 @@ const NewSkillCard = ({ skill, userId, onDelete }) => {
     };
 
     const handleAddResources = () => {
-        // Navigate to the SkillPage or appropriate resource addition page
-        console.log(`Adding resources for skill: ${skill.name}`);
-        navigate('/SkillPage'); // Change this to the correct path for adding resources
+        // Navigate to the resource upload page with the current skill ID
+        navigate(`/ResourceUpload/${skill._id}`); 
     };
 
     return (
@@ -34,7 +33,7 @@ const NewSkillCard = ({ skill, userId, onDelete }) => {
             <div className="relative">
                 {/* Image - using a dummy image if no image is provided */}
                 <img
-                    src={'https://via.placeholder.com/320x160'} // Add a dummy image URL
+                    src={skill.image} // Add a dummy image URL
                     alt="Skill image"
                     className="w-full object-cover object-center transition-transform duration-300 ease-in-out"
                     style={{ width: "320px", height: "160px" }}
@@ -48,7 +47,7 @@ const NewSkillCard = ({ skill, userId, onDelete }) => {
                     {skill.name}
                 </h2>
                 <p className="text-blue-400 mb-4 text-sm">
-                    {skill.description}
+                    {/* Add additional skill details here if needed */}
                 </p>
             </div>
 
@@ -59,7 +58,7 @@ const NewSkillCard = ({ skill, userId, onDelete }) => {
             >
                 Add Resources
             </button>
-        </div>
+         </div>
     );
 };
 

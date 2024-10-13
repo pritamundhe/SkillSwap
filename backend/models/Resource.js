@@ -14,21 +14,11 @@ const resourceSchema = new mongoose.Schema({
     trim: true,
   },
   file: {
-    data: Buffer,        // Storing file in MongoDB as binary data
-    contentType: String, // Mime type (e.g., 'application/pdf', 'image/png')
+    type: String, // Mime type (e.g., 'application/pdf', 'image/png')
   },
-  // Resource linked to the webinar or profile
-  linkedTo: {
-    type: String,
-    enum: ['Webinar', 'Skill'],
- 
-  },
-  webinar: {
+  skill:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Skill',     // Linking resource to a webinar if applicable
-    function() {
-      return this.linkedTo === 'webinar';
-    },
+    ref: 'Skill',
   },
   uploadedBy: {
     type: mongoose.Schema.Types.ObjectId,

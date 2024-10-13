@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 const ResourceUpload = () => {
-  // State to hold form data and file input
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    linkedTo: 'Skill',    // Default option for linkedTo
-    webinar: '',          // Will only be used if linkedTo is 'Webinar'
-    accessLevel: 'public' // Default access level
+    accessLevel: 'public', // Default access level
   });
+  const { skillId } = useParams(); // Retrieve skillId from URL params
+  console.log(skillId)
   const [file, setFile] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -37,24 +36,26 @@ const ResourceUpload = () => {
     setError('');
     setSuccess('');
 
-    const uploadedBy = localStorage.getItem('userId');
+    const uploadedBy = localStorage.getItem('userId'); // Assuming user ID is stored in localStorage
 
     try {
-      // Create a FormData object to handle file uploads
       const data = new FormData();
       data.append('title', formData.title);
       data.append('description', formData.description);
-      data.append('linkedTo', formData.linkedTo);
       data.append('accessLevel', formData.accessLevel);
-      if (formData.linkedTo === 'Webinar') {
-        data.append('webinar', formData.webinar); // Only append webinar if linkedTo is Webinar
-      }
       data.append('file', file); // Add file data
-      data.append('uploadedBy', uploadedBy);
+      data.append('uploadedBy', uploadedBy); // Add user ID
 
-      const response = await axios.post('http://localhost:5000/resource/upload', data, {
+      // Validate if skillId is present in the URL
+      if (!skillId) {
+        setError('No skillId found in the URL.');
+        return;
+      }
+
+      // Send data to the backend
+      const response = await axios.post(`http://localhost:5000/resource/upload/${skillId}`, data, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Set correct header for file uploads
+          'Content-Type': 'multipart/form-data',
         },
       });
 
@@ -63,19 +64,17 @@ const ResourceUpload = () => {
       setFormData({
         title: '',
         description: '',
-        linkedTo: 'Skill',
-        webinar: '',
         accessLevel: 'public',
-      }); // Clear form fields
+      });
       setFile(null); // Clear file input
-      navigate('/ResourceList');
+      navigate('/ResourceList'); // Redirect to resource list after successful upload
     } catch (err) {
       setError('Failed to upload resource');
       console.log(err);
     }
   };
 
-  const { title, description, linkedTo, webinar, accessLevel } = formData;
+  const { title, description, accessLevel } = formData;
 
   return (
     <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
@@ -132,42 +131,6 @@ const ResourceUpload = () => {
             required
           />
         </div>
-
-        {/* Linked To */}
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="linkedTo">
-            Linked To
-          </label>
-          <select
-            id="linkedTo"
-            name="linkedTo"
-            value={linkedTo}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option value="Skill">Skill</option>
-            <option value="Webinar">Webinar</option>
-          </select>
-        </div>
-
-        {/* Webinar Selection (only show if linkedTo is Webinar) */}
-        {linkedTo === 'Webinar' && (
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="webinar">
-              Select Webinar
-            </label>
-            <input
-              type="text"
-              id="webinar"
-              name="webinar"
-              value={webinar}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter webinar ID"
-              required={linkedTo === 'Webinar'}
-            />
-          </div>
-        )}
 
         {/* Access Level */}
         <div className="mb-4">
