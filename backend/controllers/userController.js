@@ -47,8 +47,10 @@ export const getUserProfile = async (req, res) => {
   const userId = req.params.userId; // Get the userId from the request parameters
 
   try {
-    // Fetch the user including the image and populate skills if necessary
-    const user = await User.findById(userId).select('name email role image skillsOffered reviews createdAt updatedAt'); // Select fields you want to return
+    // Fetch the user including the image and populate skills
+    const user = await User.findById(userId)
+      .populate('skillsOffered') // Populate skillsOffered to get skill details
+      .select('name email role image skillsOffered reviews createdAt updatedAt'); // Select fields you want to return
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -60,13 +62,14 @@ export const getUserProfile = async (req, res) => {
       user.image = `data:${user.image.contentType};base64,${user.image.data.toString('base64')}`;
     }
 
-    // Return the user's full profile including the image and skills
+    // Return the user's full profile including the image and populated skills
     res.status(200).json(user);
   } catch (error) {
     console.error('Error fetching user profile:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 /**

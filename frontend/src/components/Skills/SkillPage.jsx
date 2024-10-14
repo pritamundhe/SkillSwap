@@ -11,7 +11,6 @@ const SkillPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch skill details and resources
   useEffect(() => {
     const fetchSkillData = async () => {
       setLoading(true); // Start loading
@@ -62,7 +61,7 @@ const SkillPage = () => {
 
   return (
     <div className="w-10/12 mx-auto">
-      <div className="mx-auto p-4 space-y-6 bg-gradient-to-r min-h-screen from-purple-300 to-blue-100">
+      <div className="mx-auto p-4 space-y-6 bg-gradient-to-r min-h-screen from-purple-100 to-blue-300">
         <h1 className="text-5xl font-bold text-center text-purple-600">{skill.name}</h1>
 
         <div className="relative w-full h-64 md:h-96">

@@ -10,12 +10,20 @@ const ProfileView = () => {
     const userId = user ? user._id : null; // Assuming the user object has an _id property
     const navigate = useNavigate(); // Initialize the useNavigate hook
 
+    // Example skill mapping (This can be fetched from an API or defined elsewhere)
+    const skillMapping = {
+        'skillId1': 'Skill Title 1',
+        'skillId2': 'Skill Title 2',
+        'skillId3': 'Skill Title 3',
+        // Add all your skill mappings here
+    };
+
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/users/profile/${userId}`);
                 setProfileData(response.data);
-                console.log(response)
+                console.log('Profile Data:', response.data); // Log the full profile data
             } catch (error) {
                 console.error('Error fetching profile data:', error);
             }
@@ -30,6 +38,13 @@ const ProfileView = () => {
     if (!profileData) {
         return <div className="text-center">Loading...</div>;
     }
+
+    // Map skill IDs to titles and log the mapping
+    const skillsOfferedTitles = profileData.skillsOffered.map(skillId => {
+        const title = skillMapping[skillId];
+        console.log(`Mapping Skill ID: ${skillId} to Title: ${title || 'Not Found'}`); // Log each mapping
+        return title || skillId; // Return title or the ID if not found
+    });
 
     return (
         <div className="p-6 rounded-lg shadow-md max-w-9xl mx-auto flex flex-col gap-6 bg-gray-50 lg:flex-row">
@@ -62,7 +77,7 @@ const ProfileView = () => {
                     <div className="flex justify-between items-center">
                         <p className="text-gray-600 py-4">
                             {profileData.skillsOffered && profileData.skillsOffered.length > 0
-                                ? profileData.skillsOffered.join(', ')
+                                ? profileData.skillsOffered.map(skill => skill.name).join(', ') // Access the name property
                                 : 'No skills offered.'}
                         </p>
                         {/* Button to navigate to NewSkillList */}
@@ -73,6 +88,7 @@ const ProfileView = () => {
                             Manage Skills
                         </button>
                     </div>
+
                 </div>
 
                 {/* Reviews Section */}

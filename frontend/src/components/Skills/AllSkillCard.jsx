@@ -1,42 +1,51 @@
-import React from 'react'
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const AllSkillCard = ({skill}) => {
-    const navigate = useNavigate();
-    const handleCardClick = () => {
-        navigate(`/skill/${skill._id}`); // Navigate to skill details page with skill ID
-      };
+const AllSkillCard = ({ skill }) => {
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/skill/${skill._id}`);
+  };
+
   return (
+    <div
+      className="rounded-lg shadow-lg transform transition-transform hover:scale-105 border border-gray-200 h-80 w-full bg-white overflow-hidden cursor-pointer"
+      onClick={handleCardClick}
+      style={{ height: '320px' }} // Fixed height for the card
+    >
+      {/* Image section */}
+      <div className="relative">
+        <img
+          src={skill.image}
+          alt="Skill image"
+          className="w-full h-40 object-cover object-center"
+        />
+        {/* Add subtle purple overlay on hover */}
+        <div className="absolute inset-0 bg-purple-300 opacity-0 transition-opacity duration-500 ease-in-out hover:opacity-40"></div>
+      </div>
 
-    <div className=" text-black rounded-sm overflow-hidden shadow-purple-300 shadow-lg transform transition-all hover:scale-102 border border-gray-500 h-80 w-64 relative bg-white
-     " onClick={handleCardClick}>
-            
-            <div className="relative">
-                {/* Image */}
-                <img
-                    src={skill.image}
-                    alt="Skill image"
-                    className="w-full  object-cover object-center transition-transform duration-300 ease-in-out"
-                    style={{ width: "320px", height: "160px" }}
-                />
-                {/* Red overlay on hover */}
-                <div className="absolute inset-0 bg-purple-300 opacity-0 transition-opacity duration-700 ease-in-out hover:opacity-50"></div>
-            </div>
+      {/* Content section */}
+      <div className="p-4 flex flex-col justify-between h-full">
+        {/* Skill name */}
+        <h2 className="text-lg font-bold text-gray-800 mb-1">
+          {skill.name}
+        </h2>
 
-            <div className="p-4 relative bg-gradient-to-r min-h-screen from-gray-200 to-gray-50 h-full">
+        {/* Skill description */}
+        <p className="text-gray-500 text-sm mb-2 line-clamp-3">
+          {skill.description}
+        </p>
 
-                <h2 className="text-xl font-semibold mb-2">
-                    {skill.name}
-                </h2>
-                <p className="text-gray-400 mb-4 text-sm">
-                    {skill.description}
-                </p>
-
-            </div>
-            
-            
+        {/* Button for more details */}
+        <div className="mt-auto">
+          <button className="w-full py-2 bg-purple-600 text-white font-semibold rounded-full shadow-md hover:bg-purple-700 transition duration-300">
+            View Details
+          </button>
         </div>
-  )
-}
+      </div>
+    </div>
+  );
+};
 
-export default AllSkillCard
+export default AllSkillCard;
