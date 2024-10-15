@@ -1,51 +1,52 @@
-import Webinar from '../models/Webinar.js'; // Import the Webinar model
-import { validationResult } from 'express-validator'; // For validating inputs
+import User from '../models/User.js';
+import Webinar from '../models/Webinar.js';
 
-// Create Webinar Controller
+
 export const createWebinar = async (req, res) => {
-  // Validate request body and handle errors
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+    try {
+        const { title, description, fee, scheduledDate, duration, googleMeetLink, features, userId } = req.body;
 
-  // Destructure the request body
-  const { title, description, fee, date, time, googleMeetLink, features } = req.body;
+        if (!userId) {
+            return res.status(400).json({ error: "User ID is required." });
+        }
 
-  try {
-    // Validate if all features are provided (3 features required)
-    if (features.length !== 3) {
-      return res.status(400).json({ message: 'You must provide exactly 3 features.' });
+        // Assuming you are using Mongoose for the User model and Webinar model
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        // Create a new webinar
+        const newWebinar = new Webinar({
+            title,
+            description,
+            fee,
+            scheduledDate,
+            duration,
+            googleMeetLink,
+            features,
+            organizer: user._id, // Reference the user's _id
+        });
+
+        const savedWebinar = await newWebinar.save();
+
+        return res.status(201).json({ webinar: savedWebinar });
+    } catch (error) {
+        console.error('Error while creating webinar:', error);
+        return res.status(500).json({ error: 'Server error while creating webinar.' });
     }
-
-    // Check for valid date and time (basic check)
-    const webinarDate = new Date(`${date} ${time}`);
-    if (isNaN(webinarDate.getTime())) {
-      return res.status(400).json({ message: 'Invalid date or time format' });
-    }
-
-    // Create a new Webinar instance with the provided data
-    const newWebinar = new Webinar({
-      title,
-      description,
-      fee,
-      date: webinarDate,  // Store as a single date-time
-      googleMeetLink,
-      features,
-      createdBy: req.user._id // Assume that the user is authenticated, and req.user contains user info
-    });
-
-    // Save the webinar in the database
-    const savedWebinar = await newWebinar.save();
-
-    // Respond with the newly created webinar
-    return res.status(201).json({
-      message: 'Webinar created successfully',
-      webinar: savedWebinar
-    });
-
-  } catch (error) {
-    console.error('Error while creating webinar:', error);
-    return res.status(500).json({ message: 'Server error, please try again later' });
-  }
 };
+
+// In your backend (e.g., Express.js)
+export const getWebinars = async (req, res) => {
+    try {
+        const webinars = await Webinar.find();  // Fetch all webinars from the database
+        res.status(200).json(webinars);
+    } catch (error) {
+        res.status(500).json({ message: 'Error fetching webinars' });
+    }
+};
+
+
+

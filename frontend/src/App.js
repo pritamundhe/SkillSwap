@@ -32,9 +32,11 @@ import NewSkillList from './components/Skills/NewSkillList';
 import AllSkills from './components/Skills/AllSkills';
 import Pricing from './components/Common/Pricing';
 import SkillPage from './components/Skills/SkillPage'
-import WebinarPage from './components/Webinars/WebinarCard';
+import WebinarPage from './components/Webinars/WebinarPage';
 import Joinwebinar from './components/Webinars/Webinar';
 import CreateWebinar from './components/Webinars/CreateWebinar';
+import ChatBot from './components/Messaging/ChatBot';
+import SWebinar from './components/Webinars/SWebinar';
 
 
 function App() {
@@ -70,7 +72,8 @@ function App() {
           <Route path="/webinar" element={<WebinarPage/>} />
           <Route path='/createwebinar' element={<CreateWebinar/>} />
           <Route path="/join" element={<Joinwebinar/>} />
-          
+          <Route path='/Chatbot' element={<ChatBot/>} />
+          <Route path="/webinar/:id" element={<SWebinar />} />
 
           <Route path="/ProfileEdit" element={<ProfileEdit />} />
           <Route path='/ChatApp' element={<ChatApp/>}/>

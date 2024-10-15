@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CreateWebinar = () => {
-    // State to store form data
     const [webinarData, setWebinarData] = useState({
         title: '',
         description: '',
         fee: '',
         date: '',
         time: '',
-        googleMeetLink: '',  // New field for Google Meet link
-        features: ['', '', ''],  // Array to hold three features
+        googleMeetLink: '',  
+        features: ['', '', ''],  
     });
-
-    // Handle form changes
+    const UserId=localStorage.getItem("userId");
+    const Navigate=useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setWebinarData(prevState => ({
@@ -21,7 +21,6 @@ const CreateWebinar = () => {
         }));
     };
 
-    // Handle feature changes
     const handleFeatureChange = (index, value) => {
         const updatedFeatures = [...webinarData.features];
         updatedFeatures[index] = value;
@@ -31,11 +30,46 @@ const CreateWebinar = () => {
         }));
     };
 
-    // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Webinar Data:', webinarData);
-        // Perform API call to save webinar data or other actions
+        
+        const scheduledDate = `${webinarData.date}T${webinarData.time}`;  // Combine date and time
+
+        try {
+            const response = await fetch('http://localhost:5000/webinar/createwebinar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...webinarData,
+                    scheduledDate,  // Send the combined date and time
+                    userId: UserId,  // Replace with the actual user ID
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Error creating webinar');
+            }
+
+            const result = await response.json();
+            console.log('Webinar created successfully:', result);
+            Navigate("/webinar")
+
+            setWebinarData({
+                title: '',
+                description: '',
+                fee: '',
+                date: '',
+                time: '',
+                duration: '',
+                googleMeetLink: '',
+                features: ['', '', ''],
+            });
+
+        } catch (error) {
+            console.error('Error while creating webinar:', error);
+        }
     };
 
     return (
@@ -44,7 +78,6 @@ const CreateWebinar = () => {
                 <h2 className="text-2xl font-bold mb-6 text-start text-purple-600">Host a Webinar</h2>
                 <div className='flex gap-4'>
                     <div className='w-1/2'>
-                        {/* Webinar Title */}
                         <div className="mb-4">
                             <label className="block font-medium mb-2">Webinar Title</label>
                             <input
@@ -58,7 +91,6 @@ const CreateWebinar = () => {
                             />
                         </div>
 
-                        {/* Webinar Description */}
                         <div className="mb-4">
                             <label className="block font-medium mb-2">Description</label>
                             <textarea
@@ -71,7 +103,6 @@ const CreateWebinar = () => {
                             />
                         </div>
 
-                        {/* Webinar Fee */}
                         <div className="mb-4">
                             <label className="block font-medium mb-2">Fee</label>
                             <input
@@ -87,7 +118,6 @@ const CreateWebinar = () => {
                     </div>
 
                     <div>
-                        {/* Date and Time */}
                         <div className="flex gap-4 mb-4">
                             <div className="w-1/2">
                                 <label className="block font-medium mb-2">Date</label>
@@ -113,7 +143,7 @@ const CreateWebinar = () => {
                             </div>
                         </div>
 
-                        {/* Google Meet Link */}
+
                         <div className="mb-4">
                             <label className="block font-medium mb-2">Google Meet Link</label>
                             <input
@@ -127,7 +157,6 @@ const CreateWebinar = () => {
                             />
                         </div>
 
-                        {/* Webinar Features */}
                         <div className="mb-4">
                             <label className="block font-medium mb-2">Features</label>
                             <div className="space-y-2">
@@ -158,10 +187,6 @@ const CreateWebinar = () => {
                     </div>
                 </div>
 
-
-
-
-                {/* Submit Button */}
                 <button
                     type="submit"
                     className="w-1/4 text-white bg-purple-500 py-2 rounded-md text-lg hover:bg-purple-700 transition duration-300 mx-auto"
