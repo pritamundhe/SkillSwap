@@ -8,9 +8,8 @@ const ProfileEdit = () => {
   const [profile, setProfile] = useState({
     name: '',
     email: '',
-    skillsOffered: [],
-    skillsWanted: [],
   });
+  const [file, setFile] = useState(null);
   const [skills, setSkills] = useState([]); // State to hold available skills
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -26,28 +25,8 @@ const ProfileEdit = () => {
     }));
   };
 
-  // Handler for uploading profile picture
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
-      try {
-        const response = await axios.post('http://localhost:5000/', formData, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        setProfile((prevProfile) => ({
-          ...prevProfile,
-          profilePicture: response.data.url,
-        }));
-        setSuccess('Image uploaded successfully!');
-      } catch (error) {
-        console.error('Error uploading image:', error);
-        setError('Error uploading image. Please try again.');
-      }
-    }
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
   // Form submit handler
@@ -56,10 +35,22 @@ const ProfileEdit = () => {
     setError('');
     setSuccess('');
 
+    const formData = new FormData();
+    formData.append('name', profile.name);
+    formData.append('email', profile.email);
+    if (file) {
+      formData.append('image', file); // Add the file to form data
+    }
+
     try {
       const response = await axios.put(
-        `http://localhost:5000/users/profile`,
-        { userId, ...profile }
+        `http://localhost:5000/users/profile/${userId}`,
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data', // Set the content type for file upload
+          },
+        }
       );
 
       if (response.status === 200) {
@@ -114,6 +105,8 @@ const ProfileEdit = () => {
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="flex flex-col lg:w-full bg-white p-6 rounded-lg shadow-lg">
           <h2 className="text-3xl font-semibold mb-4 text-purple-700">Edit Profile</h2>
+          {error && <div className="text-red-500 mb-4">{error}</div>}
+          {success && <div className="text-green-500 mb-4">{success}</div>}
           <div className="flex flex-col gap-y-4">
             <div className="flex items-center">
               <img
@@ -154,40 +147,6 @@ const ProfileEdit = () => {
                   className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                   required
                 />
-              </div>
-
-              {/* Skills Offered */}
-              <div className="mb-4 col-span-2">
-                <label htmlFor="skillsOffered" className="block text-gray-700 font-medium">Skills Offered</label>
-                <select
-                  id="skillsOffered"
-                  name="skillsOffered"
-                  value={profile.skillsOffered}
-                  onChange={handleChange}
-                  multiple
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                >
-                  {skills.map(skill => (
-                    <option key={skill._id} value={skill._id}>{skill.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Skills Wanted */}
-              <div className="mb-4 col-span-2">
-                <label htmlFor="skillsWanted" className="block text-gray-700 font-medium">Skills Wanted</label>
-                <select
-                  id="skillsWanted"
-                  name="skillsWanted"
-                  value={profile.skillsWanted}
-                  onChange={handleChange}
-                  multiple
-                  className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
-                >
-                  {skills.map(skill => (
-                    <option key={skill._id} value={skill._id}>{skill.name}</option>
-                  ))}
-                </select>
               </div>
 
               <button

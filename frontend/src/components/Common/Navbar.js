@@ -68,7 +68,7 @@ const Navbar = () => {
                 className="w-10 h-10 rounded-full object-cover cursor-pointer"
                 onClick={() => navigate('/Profile')}
               />
-              <span className="text-gray-600 cursor-pointer" onClick={() => navigate('/Profile')}>
+              <span className="text-gray-600 cursor-pointer" onClick={() => navigate('/ProfileView')}>
                 {user?.name || 'User'}
               </span>
               <button onClick={handleLogout} className="text-white bg-red-600 hover:bg-red-500 px-4 py-1.5">
