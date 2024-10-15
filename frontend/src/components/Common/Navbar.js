@@ -47,7 +47,7 @@ const Navbar = () => {
             <li><Link to="/" className="text-gray-600 hover:text-purple-600">Home</Link></li>
             <li><Link to="/AllSkills" className="text-gray-600 hover:text-purple-600">Skills</Link></li>
             <li><Link to="/webinar" className="text-gray-600 hover:text-purple-600">Webinar</Link></li>
-            <li><Link to="/ChatApp" className="text-gray-600 hover:text-purple-600">Messages</Link></li>
+            <li><Link to="/Chatbot" className="text-gray-600 hover:text-purple-600">Messages</Link></li>
           </ul>
         </div>
         {/* Mobile Menu Toggle Button */}

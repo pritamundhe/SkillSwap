@@ -13,14 +13,19 @@ const WebinarSchema = new mongoose.Schema({
     type: Date,
     required: true, // Date and time the webinar is scheduled for
   },
-  duration: {
-    type: Number,
-    required: true, // Duration of the webinar in minutes
-  },
   organizer: {
     type: mongoose.Schema.Types.ObjectId, // Reference to the user organizing the webinar
     ref: 'User',
     required: true,
+  },
+  fee :{
+    type:Number
+  },
+  features: [{
+    type: String, // Array of strings to list features
+  }],
+  googleMeetLink :{
+    type: String,
   },
   attendees: [{
     type: mongoose.Schema.Types.ObjectId, // References to users attending the webinar

@@ -86,7 +86,7 @@ const NewSkillList = () => {
 
           {/* Modal Content */}
           <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="max-w-lg w-full mx-auto p-6 bg-white rounded-lg shadow-md relative">
+            <div className="max-w-lg w-full h-5/6 mx-auto bg-white rounded-lg shadow-md relative">
               {/* Close Modal Button */}
               <button
                 className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"

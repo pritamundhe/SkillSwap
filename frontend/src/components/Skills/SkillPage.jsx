@@ -1,41 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'; // Import useNavigate
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom"; 
 import ReviewList from '../Reviews/ReviewList';
 
 const SkillPage = () => {
-  const { skillId } = useParams();
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const { skillId } = useParams(); // Get the skillId from URL parameters
   const [skill, setSkill] = useState(null);
-  const [resources, setResources] = useState([]);
+  const [resources, setResources] = useState([]); // State for resources
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Fetch skill details and resources
+  const navigate = useNavigate();
   useEffect(() => {
-    const fetchSkillData = async () => {
-      setLoading(true); // Start loading
+    const fetchSkill = async () => {
       try {
-        // Fetch skill details
-        const skillResponse = await axios.get(`http://localhost:5000/skill/SkillDetails/${skillId}`);
-        setSkill(skillResponse.data);
-
-        // Fetch related resources by skill ID
-        const resourceResponse = await axios.get(`http://localhost:5000/resource/${skillId}`);
-        setResources(resourceResponse.data); // Assuming API response contains the list of resources
-
-      } catch (err) {
-        console.error(err); // Log the error for debugging
-        setError("Failed to load skill details or resources. Please try again later.");
-      } finally {
-        setLoading(false); // End loading
+        const response = await fetch(`http://localhost:5000/skill/skillDetails/${skillId}`); // Fetch skill details by ID
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setSkill(data);
+      } catch (error) {
+        setError(error.message);
       }
     };
 
-    fetchSkillData();
-  }, [skillId]);
+    const fetchResources = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/resource/${skillId}`); // Fetch resources by skill ID
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setResources(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
 
-  // Callback function to update reviews after submission
+    const fetchData = async () => {
+      await Promise.all([fetchSkill(), fetchResources()]); // Wait for both fetches to complete
+      setLoading(false); // Set loading to false after both fetches
+    };
+
+    fetchData();
+  }, [skillId]); // Run effect when skillId changes
+
   const handleReviewAdded = (newReview) => {
     setSkill((prevSkill) => ({
       ...prevSkill,
@@ -45,35 +53,98 @@ const SkillPage = () => {
 
   // Handler to navigate to ResourcePage with resourceId
   const handleResourceClick = (resourceId) => {
-    navigate(`/ResourcePage/${resourceId}`); // Navigate to the resource page using resourceId
+    navigate(`/ResourcePage/${resourceId}`); // Navigate to the resource page using resourceId
   };
 
   if (loading) {
-    return <p>Loading...</p>; // You might replace this with a spinner component
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <p>{error}</p>;
+    return <div>Error: {error}</div>;
   }
 
   if (!skill) {
-    return <p>No skill found</p>;
+    return <div>No skill found.</div>; // Fallback in case skill is still null
   }
 
   return (
-    <div className="w-10/12 mx-auto">
-      <div className="mx-auto p-4 space-y-6 bg-gradient-to-r min-h-screen from-purple-300 to-blue-100">
-        <h1 className="text-5xl font-bold text-center text-purple-600">{skill.name}</h1>
+    <div className="bg-gray-50 min-h-screen p-6 bg-gradient-to-r from-purple-100 via-blue-50 to-blue-200">
+      <div className="container mx-auto px-6 md:px-10 lg:px-20 flex flex-col md:flex-row gap-8">
+        {/* Main Skill Content */}
+        <div className="w-full md:w-3/4 bg-white rounded-lg shadow-lg p-6">
+          {/* Category Label */}
+          <div className="mb-2">
+            <span className="bg-purple-100 text-purple-600 text-xs font-semibold px-2 py-1 rounded-full">
+              {skill.category} {/* Dynamic category */}
+            </span>
+          </div>
 
-        <div className="relative w-full h-64 md:h-96">
-          <img
-            src={skill.image || '/logo192.png'}
-            alt={skill.name}
-            className="w-3/5 mx-auto h-full object-cover rounded-lg my-4"
-          />
+          {/* Skill Title */}
+          <h1 className="text-4xl font-bold text-gray-800 mb-4">
+            {skill.title} {/* Dynamic title */}
+          </h1>
+
+          {/* Skill Image */}
+          <div className="relative mb-6">
+            <img
+              src={skill.image || '/logo192.png'}
+              alt={skill.name}
+              className="w-full h-64 object-cover rounded-lg shadow-md"
+            />
+          </div>
+
+          {/* Skill Content */}
+          <div className="prose max-w-none">
+            <p>{skill.content}</p> {/* Dynamic content */}
+          </div>
         </div>
 
-        <div className="bg-gray-100 p-4 rounded-lg">
+        {/* Sidebar with Author Info */}
+        <aside className="w-full md:w-1/4 flex flex-col gap-6">
+          {/* User Info Box */}
+          <div className="bg-gray-100 rounded-lg shadow-lg p-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              {skill.author?.name || 'Unknown Author'} {/* Dynamic author name with fallback */}
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              {skill.author?.bio || 'No bio available.'} {/* Dynamic author bio with fallback */}
+            </p>
+            <a href={skill.author?.link} className="text-blue-600 hover:underline inline-flex items-center">
+              {/* LinkedIn Icon */}
+              <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                {/* LinkedIn Icon SVG Path */}
+              </svg>
+              LinkedIn
+            </a>
+          </div>
+
+          {/* Social Share Buttons Box */}
+          <div className="bg-gray-100 rounded-lg shadow-lg p-6">
+            <p className="text-gray-500 text-sm mb-2">Share with your community!</p>
+            <div className="flex space-x-4">
+              {/* Social Share Buttons */}
+              {/* Add your social share buttons here */}
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      {/* Description Section */}
+      <div className="container mx-auto px-6 md:px-10 lg:px-20 mt-8">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Description</h2>
+          <p className="text-gray-600 text-base">
+            {skill.description} {/* Dynamic description */}
+          </p>
+        </div>
+      </div>
+
+
+      {/* Resources Section */}
+      <div className="container mx-auto px-6 md:px-10 lg:px-20 mt-8 ">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+
           <h2 className="text-xl font-semibold mb-2">Resources</h2>
 
           {/* Display resources in a list */}
@@ -82,7 +153,7 @@ const SkillPage = () => {
               resources.map((resource) => (
                 <li
                   key={resource._id}
-                  className="text-blue-600 cursor-pointer" // Styling for clickable text
+                  className="text-blue-600 cursor-pointer"
                   onClick={() => handleResourceClick(resource._id)} // Navigate on click
                   role="button" // Adding role for accessibility
                   tabIndex={0} // Making it keyboard accessible
@@ -96,21 +167,12 @@ const SkillPage = () => {
             )}
           </ul>
         </div>
-
-        <div className="space-y-4">
-          <p className="text-gray-600">{skill.description}</p>
-
-          <div className="flex items-center space-x-4 text-sm text-gray-500">
-            <span className="flex items-center">📚 Category: {skill.category}</span>
-            <span className="flex items-center">👤 Level: {skill.level}</span>
+      </div>
+      <div className="container mx-auto px-6 md:px-10 lg:px-20 mt-8 ">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <ReviewList skill={skill} skillId={skillId} onReviewAdded={handleReviewAdded} />
           </div>
         </div>
-
-        {/* Review Section */}
-        <div className="mt-6">
-          <ReviewList skill={skill} skillId={skillId} onReviewAdded={handleReviewAdded} />
-        </div>
-      </div>
     </div>
   );
 };
