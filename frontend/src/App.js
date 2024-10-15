@@ -34,6 +34,7 @@ import Pricing from './components/Common/Pricing';
 import SkillPage from './components/Skills/SkillPage'
 import WebinarPage from './components/Webinars/WebinarCard';
 import Joinwebinar from './components/Webinars/Webinar';
+import CreateWebinar from './components/Webinars/CreateWebinar';
 
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
           <Route path="/NewSKillList" element={<NewSkillList />} />
           <Route path="/AllSkills" element={<AllSkills />} />
           <Route path="/webinar" element={<WebinarPage/>} />
+          <Route path='/createwebinar' element={<CreateWebinar/>} />
           <Route path="/join" element={<Joinwebinar/>} />
           
 

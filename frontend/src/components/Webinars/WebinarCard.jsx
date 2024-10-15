@@ -139,9 +139,11 @@ function WebinarPage() {
           <h3 className="text-2xl font-bold text-purple-700 mb-6">Take Webinar</h3>
           <p className="text-gray-600 mb-6">Host and manage your own webinar sessions.</p>
           <div className="flex justify-center">
+            <Link to="/createwebinar">
             <button className="bg-purple-600 text-white py-3 px-6 rounded-full hover:bg-purple-700 transition duration-300 shadow-md hover:shadow-lg">
               Click Here
             </button>
+            </Link>
           </div>
         </div>
 

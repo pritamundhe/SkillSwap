@@ -88,7 +88,6 @@ const ProfileView = () => {
                             Manage Skills
                         </button>
                     </div>
-
                 </div>
 
                 {/* Reviews Section */}

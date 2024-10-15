@@ -51,10 +51,10 @@ const ReviewList = ({ onReviewAdded, skillId }) => {
     };
 
     return (
-        <div className="bg-gray-100 p-5">
-            <div className="m-4 flex flex-col md:flex-row lg:mx-16 gap-3">
+        <div className="bg-white bg-inherit p-6">
+            <div className="flex flex-col md:flex-row  gap-3">
                 <div className="w-full md:w-1/4">
-                    <div className="shadow-md shadow-gray-400 p-2.5 rounded-sm py-5 bg-white">
+                    <div className="shadow-md shadow-gradient-to-r from-purple-100 to-blue-200 p-2.5 rounded-sm py-5 bg-white">
                         <h2 className="my-2.5 text-4xl font-bold">Reviews</h2>
                         {/* Star Ratings */}
                         <div className="flex items-center">

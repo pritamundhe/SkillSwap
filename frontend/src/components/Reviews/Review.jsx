@@ -24,7 +24,7 @@ function Review({ review }) {
     };
 
     return (
-        <div className='m-2.5 bg-gray-50 p-2.5 rounded-sm'>
+        <div className='m-2.5 bg-white p-2.5 rounded-sm'>
             <article>
                 <div className="flex items-center mb-4 gap-3">
                     <span className="material-symbols-outlined text-4xl">
