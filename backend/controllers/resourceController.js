@@ -2,6 +2,7 @@
 import Resource from '../models/Resource.js';
 import User from '../models/User.js';
 import Skill from '../models/Skill.js'; // Import the Skill model if not already done
+import Pdf from '../models/Pdf.js'
 
 // Fetch a resource by ID
 export const details = async (req, res) => {
@@ -102,5 +103,65 @@ export const getUserResources = async (req, res) => {
   } catch (error) {
     console.error('Error fetching resources:', error);
     return res.status(500).json({ error: error.message });
+  }
+};
+
+export const uploadPdfHandler = async (req, res) => {
+  try {
+    // Check if a file was uploaded
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded. Please upload a PDF.' });
+    }
+
+    // Get title, uploadedBy, and skillId from the request body and params
+    const { title, uploadedBy } = req.body;
+    const { skillId } = req.params;
+
+    console.log('Skill ID:', skillId);  // Log skillId
+    console.log('Title:', title);        // Log title
+    console.log('Uploaded By:', uploadedBy);  // Log uploadedBy
+
+    // Validate if title, uploadedBy, and skillId are provided
+    if (!title || !uploadedBy || !skillId) {
+      return res.status(400).json({ error: 'Missing required fields: title, uploadedBy, or skillId.' });
+    }
+
+    // Create a new PDF document and save it in the database
+    const newPdf = new Pdf({
+      title,
+      filePath: req.file.path,  // File path where the PDF is stored
+      uploadedBy,
+      skillId,
+    });
+
+    const savedPdf = await newPdf.save();
+    console.log('PDF saved:', savedPdf); // Log saved PDF
+
+    // Find the skill and update it by adding the PDF reference
+    const skill = await Skill.findById(skillId);
+    console.log('Retrieved Skill:', skill); // Log the retrieved skill
+    if (!skill) {
+      return res.status(404).json({ error: 'Skill not found' });
+    }
+
+    // Add the new PDF reference to the skill's pdfs array
+    skill.pdfs.push(savedPdf._id);
+    await skill.save();
+
+    // Respond with success message and the PDF data
+    res.status(201).json({
+      message: 'PDF uploaded and linked to skill successfully!',
+      file: {
+        filename: req.file.filename,
+        path: req.file.path,
+        title,          // Title provided by user
+        uploadedBy,     // User ID or name
+        skillId,        // Skill ID
+        uploadedAt: savedPdf.uploadedAt, // Timestamp of the upload
+      }
+    });
+  } catch (err) {
+    console.error('Error uploading PDF:', err);
+    res.status(500).json({ error: 'Failed to upload PDF' });
   }
 };

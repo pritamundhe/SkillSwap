@@ -1,6 +1,8 @@
 import express from 'express';
-import { createResource, details, getResourcesBySkillId, getUserResources } from '../controllers/resourceController.js';
+import { createResource, details, getResourcesBySkillId, getUserResources, uploadPdfHandler } from '../controllers/resourceController.js';
 import upload from '../middleware/uploadMiddleware.js';
+import uploadPdf from '../middleware/pdfUpload.js';
+
 
 const router = express.Router();
 
@@ -11,5 +13,6 @@ router.post('/upload/:skillId',upload, createResource);
 router.get('/user/:userId', getUserResources);
 router.get('/:skillId', getResourcesBySkillId);
 router.get('/details/:id',details );
+router.post('/upload/pdf/:skillId', uploadPdf, uploadPdfHandler);
 
 export default router;

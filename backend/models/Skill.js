@@ -19,7 +19,6 @@ const SkillSchema = new mongoose.Schema({
   level: {
     type: String,        
     enum: ['Beginner', 'Intermediate', 'Advanced'],
-  
   },
   addedBy: {
     type: mongoose.Schema.Types.ObjectId, 
@@ -29,14 +28,19 @@ const SkillSchema = new mongoose.Schema({
   image: {
     type: String,
   },
-  resources:{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Resource',
-  },
+  pdfs: [
+    { type: mongoose.Schema.Types.ObjectId, ref: 'Pdf' }
+  ],
+  resources: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Resource',
+    },
+  ],
   reviews: [
     {
-      type: mongoose.Schema.Types.ObjectId,  // Reference to individual reviews
-      ref: 'Review' // Reference the Review schema
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review',
     }
   ],
   createdAt: {
@@ -48,6 +52,7 @@ const SkillSchema = new mongoose.Schema({
     default: Date.now,
   }
 });
+
 
 
 SkillSchema.pre('save', function (next) {
