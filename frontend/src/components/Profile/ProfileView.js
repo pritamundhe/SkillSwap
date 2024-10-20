@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate from React Router
 import axios from 'axios';
 import ProfileEdit from './ProfileEdit';  // Import the ProfileEdit component
 import VerifiedIcon from './VerifiedIcon';  // Import the VerifiedIcon component
@@ -8,6 +9,7 @@ const ProfileView = () => {
     const { user } = useContext(AuthContext);
     const [profileData, setProfileData] = useState(null);
     const [showModal, setShowModal] = useState(false);  // State to control the modal visibility
+    const navigate = useNavigate();  // Initialize the navigate hook
 
     const userId = user ? user._id : null;
 
@@ -81,9 +83,18 @@ const ProfileView = () => {
                         <h2 className="text-xl font-bold mb-2">Reading list</h2>
                         <p className="text-gray-500">No stories <i className="fas fa-lock"></i></p>
                     </div>
-
+                        {/* Manage Skills Button aligned to the right */}
+                    <div className=" mb-4 w-full text-right m-auto">
+                        <button
+                            className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md"
+                            onClick={() => navigate('/NewSkillList')}  // Redirect to the NewSkillList page
+                        >
+                            Manage Skills
+                        </button>
+                    </div>
                     {/* Skills Section */}
                     <div className="grid grid-cols-3 gap-4">
+                        
                         {skillsOffered.length > 0 ? (
                             skillsOffered.map((skill, index) => (
                                 <div key={index} className="bg-white p-4 rounded-lg shadow-md">
@@ -108,12 +119,12 @@ const ProfileView = () => {
                     </div>
                 </div>
 
-                {/* Right Section - Profile Picture and Edit Button */}
+                {/* Right Section - Profile Picture, Edit Button, and Manage Skills Button */}
                 <div className="w-1/3 flex flex-col items-center">
                     <img
                         src={profileData.image || 'https://placehold.co/80x80'}
                         alt={`Profile picture of ${profileData.name}`}
-                        className="w-20 h-20 rounded-full mb-4"
+                        className="w-24 h-24 rounded-full mb-4"
                     />
                     <span className="font-semibold">{profileData.name}</span>
                     <button
@@ -122,6 +133,8 @@ const ProfileView = () => {
                     >
                         Edit profile
                     </button>
+
+                    
                 </div>
             </div>
 
