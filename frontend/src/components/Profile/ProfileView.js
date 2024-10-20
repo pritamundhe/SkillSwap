@@ -83,18 +83,21 @@ const ProfileView = () => {
                         <h2 className="text-xl font-bold mb-2">Reading list</h2>
                         <p className="text-gray-500">No stories <i className="fas fa-lock"></i></p>
                     </div>
-                        {/* Manage Skills Button aligned to the right */}
-                    <div className=" mb-4 w-full text-right m-auto">
-                        <button
+
+                    {/* Manage Skills Button aligned to the right */}
+                    <div className="flex justify-between items-center mb-4">
+                         <h2 className="text-2xl font-bold">Skills Offered</h2> {/* Skills Offered Heading */}
+    
+                          {/* Manage Skills Button */}
+                         <button
                             className="bg-green-500 text-white px-4 py-2 rounded-lg shadow-md"
                             onClick={() => navigate('/NewSkillList')}  // Redirect to the NewSkillList page
                         >
-                            Manage Skills
+                        Manage Skills
                         </button>
                     </div>
                     {/* Skills Section */}
                     <div className="grid grid-cols-3 gap-4">
-                        
                         {skillsOffered.length > 0 ? (
                             skillsOffered.map((skill, index) => (
                                 <div key={index} className="bg-white p-4 rounded-lg shadow-md">
@@ -133,8 +136,6 @@ const ProfileView = () => {
                     >
                         Edit profile
                     </button>
-
-                    
                 </div>
             </div>
 
