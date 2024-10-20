@@ -8,11 +8,15 @@ import Pdf from '../models/Pdf.js'
 export const details = async (req, res) => {
   try {
     const resourceId = req.params.id;
-    const resource = await Resource.findById(resourceId).populate('uploadedBy skill'); // Populate fields if necessary
+    const resource = await Resource.findById(resourceId).populate('uploadedBy skill');
 
     if (!resource) {
       return res.status(404).json({ message: 'Resource not found' });
     }
+
+    // Increment the views for the user who uploaded the resource
+    const userId = resource.uploadedBy._id; // Assuming 'uploadedBy' is the user who uploaded the resource
+    await User.findByIdAndUpdate(userId, { $inc: { views: 1 } }); // Increment views by 1
 
     res.json(resource);
   } catch (error) {
@@ -20,6 +24,7 @@ export const details = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 

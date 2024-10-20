@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  views:{
+    type: Number,
+    default: 0,
+  },
   image: {
     // Storing profile picture as binary data directly in MongoDB
     type: String,

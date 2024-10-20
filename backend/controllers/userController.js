@@ -50,7 +50,7 @@ export const getUserProfile = async (req, res) => {
     // Fetch the user including the image and populate skills
     const user = await User.findById(userId)
       .populate('skillsOffered') // Populate skillsOffered to get skill details
-      .select('name email role image skillsOffered reviews createdAt updatedAt'); // Select fields you want to return
+      .select('name email role views image skillsOffered reviews createdAt updatedAt'); // Select fields you want to return
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

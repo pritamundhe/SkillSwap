@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import axios from 'axios';
 import ProfileEdit from './ProfileEdit';  // Import the ProfileEdit component
+import VerifiedIcon from './VerifiedIcon';  // Import the VerifiedIcon component
 
 const ProfileView = () => {
     const { user } = useContext(AuthContext);
@@ -15,7 +16,7 @@ const ProfileView = () => {
             try {
                 const response = await axios.get(`http://localhost:5000/users/profile/${userId}`);
                 setProfileData(response.data);
-                console.log('Profile Data:', response.data);
+                console.log('Profile Data:', response.data);  // Check if views is updated
             } catch (error) {
                 console.error('Error fetching profile data:', error);
             }
@@ -31,6 +32,8 @@ const ProfileView = () => {
     }
 
     const skillsOffered = profileData.skillsOffered || [];
+    console.log('Profile Data:', profileData);
+    console.log('Profile Views:', profileData.views);
 
     // Function to truncate text
     const truncateText = (text, limit) => {
@@ -42,7 +45,18 @@ const ProfileView = () => {
             <div className="flex justify-between items-start">
                 {/* Left Section - Main Profile Content */}
                 <div className="w-2/3">
-                    <h1 className="text-4xl font-bold mb-4">{profileData.name}</h1>
+                    <h1 className="text-4xl font-bold mb-4 flex items-center">
+                        {profileData.name}
+                        {profileData.views > 0 && (
+                            <span className="ml-2 flex items-center">
+                                <VerifiedIcon />  {/* Verified icon */}
+                                <span className="bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full ml-2">
+                                    Verified
+                                </span>
+                            </span>
+                        )}
+                    </h1>
+
                     <nav className="mb-8">
                         <ul className="flex space-x-4">
                             <li className="border-b-2 border-black pb-1">
