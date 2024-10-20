@@ -1,17 +1,45 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const SWebinar = () => {
   const location = useLocation();
-  const webinar = location.state?.webinar;
+  const { id } = useParams(); // Assuming you pass webinar ID in the route.
+  const [webinar, setWebinar] = useState(location.state?.webinar || null); // Fallback to location.state if available.
+  const [loading, setLoading] = useState(!webinar); // Only show loader if webinar is not present.
+  const [error, setError] = useState(null);
 
-  if (!webinar) {
-    return <div>Webinar not found</div>;
-  }
+  // Function to fetch webinar details if location.state is null
+  const fetchWebinar = async (webinarId) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/webinar/getwebinardetails/${webinarId}`);
+      setWebinar(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError('Webinar not found');
+      setLoading(false);
+    }
+  };
+
+  // UseEffect hook to fetch webinar if state is not passed
+  useEffect(() => {
+    if (!webinar) {
+      fetchWebinar(id); // Fetch the webinar by ID if not in location.state
+    }
+  }, [id, webinar]);
+
   const formatTime = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+
+  if (loading) {
+    return <div>Loading webinar details...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="bg-gradient-to-r from-purple-100 to-blue-200 flex items-center justify-center p-4 min-h-screen rounded-md">
@@ -43,7 +71,7 @@ const SWebinar = () => {
             </a>
           </p>
         </div>
-      <h1 className='text-gray-400 text-[13px]'>We will notify you if any changes (date /time)</h1>
+        <h1 className='text-gray-400 text-[13px]'>We will notify you if any changes (date / time)</h1>
       </div>
     </div>
   );
