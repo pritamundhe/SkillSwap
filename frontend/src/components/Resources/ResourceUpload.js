@@ -6,19 +6,16 @@ const ResourceUpload = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    accessLevel: 'public', // Default access level
+    accessLevel: 'public',
   });
-  const [pdfData, setPdfData] = useState({ title: '' }); // State for the PDF form
-  const { skillId } = useParams(); // Retrieve skillId from URL params
-
+  const [pdfData, setPdfData] = useState({ title: '' });
+  const { skillId } = useParams();
   const [file, setFile] = useState(null);
-  const [pdfFile, setPdfFile] = useState(null); // State for the PDF file
+  const [pdfFile, setPdfFile] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
   const navigate = useNavigate();
 
-  // Handle form data change for resource form
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -27,7 +24,6 @@ const ResourceUpload = () => {
     }));
   };
 
-  // Handle form data change for PDF form
   const handlePdfChange = (e) => {
     const { name, value } = e.target;
     setPdfData((prevData) => ({
@@ -36,222 +32,185 @@ const ResourceUpload = () => {
     }));
   };
 
-  // Handle file input change for resource form
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
-  // Handle file input change for PDF form
   const handlePdfFileChange = (e) => {
     setPdfFile(e.target.files[0]);
   };
 
-  // Handle form submit for resource
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
-    const uploadedBy = localStorage.getItem('userId'); // Assuming user ID is stored in localStorage
+    const uploadedBy = localStorage.getItem('userId');
 
     try {
       const data = new FormData();
       data.append('title', formData.title);
       data.append('description', formData.description);
       data.append('accessLevel', formData.accessLevel);
-      data.append('file', file); // Add file data
-      data.append('uploadedBy', uploadedBy); // Add user ID
+      data.append('file', file);
+      data.append('uploadedBy', uploadedBy);
 
-      // Validate if skillId is present in the URL
       if (!skillId) {
         setError('No skillId found in the URL.');
         return;
       }
 
-      // Send data to the backend
       const response = await axios.post(`http://localhost:5000/resource/upload/${skillId}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      console.log('Resource uploaded:', response.data);
       setSuccess('Resource uploaded successfully!');
       setFormData({
         title: '',
         description: '',
         accessLevel: 'public',
       });
-      setFile(null); // Clear file input
-      navigate('/ResourceList'); // Redirect to resource list after successful upload
+      setFile(null);
+      navigate('/ResourceList');
     } catch (err) {
       setError('Failed to upload resource');
-      console.log(err);
     }
   };
 
-  // Handle PDF file upload submit
   const handlePdfSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
-    const uploadedBy = localStorage.getItem('userId'); // Assuming user ID is stored in localStorage
+    const uploadedBy = localStorage.getItem('userId');
 
     try {
       const data = new FormData();
       data.append('title', pdfData.title);
-      data.append('file', pdfFile); // Add PDF file data
-      data.append('uploadedBy', uploadedBy); // Add user ID
+      data.append('file', pdfFile);
+      data.append('uploadedBy', uploadedBy);
 
-      // Send data to the backend for PDF
       const response = await axios.post(`http://localhost:5000/resource/upload/pdf/${skillId}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      console.log('PDF uploaded:', response.data);
       setSuccess('PDF uploaded successfully!');
       setPdfData({ title: '' });
-      setPdfFile(null); // Clear PDF file input
+      setPdfFile(null);
     } catch (err) {
       setError('Failed to upload PDF');
-      console.log(err);
     }
   };
 
   return (
-    <div className="flex justify-between max-w-5xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-      {/* Resource Form */}
-      <div className="w-1/2 pr-4">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">Upload a Resource</h2>
+    <div className="bg-gray-100 flex items-center justify-center h-screen">
+      <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-3xl">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Upload Resource or PDF</h2>
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        {success && <p className="text-green-500 mb-4">{success}</p>}
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {success && <p className="text-green-500 text-center mb-4">{success}</p>}
 
-        <form onSubmit={handleSubmit} encType="multipart/form-data">
-          {/* Title */}
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="title">
-              Resource Title
-            </label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter resource title"
-              required
-            />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Resource Upload Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <h3 className="text-xl font-semibold text-gray-700">Upload a Resource</h3>
 
-          {/* Description */}
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
-              Resource Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter resource description"
-              required
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Resource Title</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                className="h-12 mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-4 py-3"
+                placeholder="Enter resource title"
+                required
+              />
+            </div>
 
-          {/* File Input */}
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="file">
-              Upload File
-            </label>
-            <input
-              type="file"
-              id="file"
-              name="file"
-              onChange={handleFileChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-4 py-3"
+                placeholder="Enter resource description"
+                required
+              ></textarea>
+            </div>
 
-          {/* Access Level */}
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="accessLevel">
-              Access Level
-            </label>
-            <select
-              id="accessLevel"
-              name="accessLevel"
-              value={formData.accessLevel}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Upload File</label>
+              <input
+                type="file"
+                onChange={handleFileChange}
+                className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Access Level</label>
+              <select
+                name="accessLevel"
+                value={formData.accessLevel}
+                onChange={handleChange}
+                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm px-4 py-3"
+              >
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-blue-600 text-white font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              <option value="public">Public</option>
-              <option value="private">Private</option>
-            </select>
-          </div>
+              Upload Resource
+            </button>
+          </form>
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Upload Resource
-          </button>
-        </form>
-      </div>
+          {/* PDF Upload Form */}
+          <form onSubmit={handlePdfSubmit} className="space-y-4">
+            <h3 className="text-xl font-semibold text-gray-700">Upload a PDF</h3>
 
-      {/* PDF Upload Form */}
-      <div className="w-1/2 pl-4">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">Upload a PDF</h2>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">PDF Title</label>
+              <input
+                type="text"
+                name="title"
+                value={pdfData.title}
+                onChange={handlePdfChange}
+                className="mt-1 block w-full border border-gray-300 rounded-lg shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm px-4 py-3"
+                placeholder="Enter PDF title"
+                required
+              />
+            </div>
 
-        <form onSubmit={handlePdfSubmit} encType="multipart/form-data">
-          {/* Title */}
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pdfTitle">
-              PDF Title
-            </label>
-            <input
-              type="text"
-              id="pdfTitle"
-              name="title"
-              value={pdfData.title}
-              onChange={handlePdfChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Enter PDF title"
-              required
-            />
-          </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Upload PDF</label>
+              <input
+                type="file"
+                onChange={handlePdfFileChange}
+                accept="application/pdf"
+                className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-100 file:text-green-700 hover:file:bg-green-200"
+                required
+              />
+            </div>
 
-          {/* PDF File Input */}
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="pdfFile">
+            <button
+              type="submit"
+              className="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
               Upload PDF
-            </label>
-            <input
-              type="file"
-              id="pdfFile"
-              name="pdfFile"
-              onChange={handlePdfFileChange}
-              accept="application/pdf"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              required
-            />
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Upload PDF
-          </button>
-        </form>
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

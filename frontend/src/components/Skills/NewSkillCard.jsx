@@ -25,8 +25,8 @@ const NewSkillCard = ({ skill, userId, onDelete }) => {
     };
 
     return (
-        <div className="text-black rounded-sm overflow-hidden shadow-lg transform transition-all hover:scale-102 border border-blue-500 h-80 w-100 relative bg-white">
-            <div className="absolute bottom-5 right-4 h-10 w-10 bg-blue-600 text-white flex items-center justify-center rounded-sm hover:bg-blue-400"
+        <div className="text-blue rounded-md overflow-hidden shadow-lg transform transition-all hover:scale-102 border h-80 w-100 relative bg-white">
+            <div className="absolute bottom-5 right-4 h-10 w-10 text-blue  flex items-center justify-center rounded-sm hover:bg-blue-400"
                 onClick={handleDelete}>
                 <FiTrash2 size={24} /> {/* Adjusted size */}
             </div>
@@ -54,7 +54,7 @@ const NewSkillCard = ({ skill, userId, onDelete }) => {
             {/* Add Resources Button */}
             <button
                 onClick={handleAddResources}
-                className='bg-blue-600 text-white px-4 py-2 rounded-sm hover:bg-blue-400 absolute bottom-5 left-5'
+                className='border-2 border-black-300 text-black px-4 py-2 rounded-md absolute bottom-5 left-5'
             >
                 Add Resources
             </button>

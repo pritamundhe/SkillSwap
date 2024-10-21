@@ -62,7 +62,7 @@ const NewSkillList = () => {
     setSkills(skills.filter(skill => skill._id !== skillId)); // Remove the deleted skill from state
 };
   return (
-    <div className='bg-gray-50 mx-14 p-5'>
+    <div className=' mx-14 p-5'>
       <div className='p-4 flex justify-around mx-8'>
         <h2 className="text-2xl font-bold">Skills</h2>
         <div className="flex space-x-2 ml-auto">
@@ -74,7 +74,7 @@ const NewSkillList = () => {
           </button>
         </div>
       </div>
-      <div className='flex gap-12  flex-wrap my-5 justify-center bg-gray-200 rounded-sm py-5'>
+      <div className='flex gap-8  flex-wrap my-5 justify-center rounded-sm py-5'>
         {skills.map((skill, index) => (
           <NewSkillCard key={index} skill={skill} userId={userId} onDelete={handleDeleteSkill}/> // Pass each skill to SkillCard
         ))}
@@ -82,7 +82,7 @@ const NewSkillList = () => {
       {showModal && (
         <div>
           {/* Background Blur */}
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 backdrop-blur-sm z-40"></div>
+          <div className="fixed inset-0 backdrop-blur-sm z-40"></div>
 
           {/* Modal Content */}
           <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -92,7 +92,7 @@ const NewSkillList = () => {
                 className="absolute top-2 right-2 text-gray-400 hover:text-gray-600"
                 onClick={() => setShowModal(false)} // Close modal on button click
               >
-                ✖
+              Add Skill  ✖
               </button>
               <AddSkill onAddSkill={handleAddSkill} userId={userId} />
             </div>
