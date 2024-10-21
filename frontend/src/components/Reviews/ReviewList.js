@@ -46,27 +46,55 @@ const ReviewList = ({ skillId }) => {
         setUserReviewed(true);
     };
 
-    return (
-        <div className="bg-gray-50 p-4">
-            <div className="max-w-md mx-auto bg-white p-4 rounded-lg shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4 text-center">Reviews</h2>
+    // Function to calculate the percentage of each rating level
+    const calculateRatingPercentage = (rating) => {
+        const count = reviews.filter(review => review.rating === rating).length;
+        return (count / reviews.length) * 100 || 0;
+    };
 
-                <div className="bg-gray-100 p-3 rounded-lg mb-4 text-center">
-                    <h3 className="text-2xl font-bold text-purple-600">{averageRating}</h3>
-                    <div className="flex justify-center mb-2">
-                        {Array.from({ length: 5 }, (_, index) => (
-                            <svg
-                                key={index}
-                                className={`w-4 h-4 ${index < averageRating ? 'text-purple-500' : 'text-gray-400'}`}
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                viewBox="0 0 22 20"
-                            >
-                                <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
-                            </svg>
-                        ))}
+    return (
+        <div className=" p-6">
+            <div className="max-w-md mx-auto bg-white p-4 rounded-lg">
+                <h2 className="text-xl font-bold mb-4">Learners feedback</h2>
+                
+                <div className="flex items-center mb-4">
+                    <div className="text-6xl font-bold text-orange-600 mr-4">{averageRating}</div>
+                    <div>
+                        <div className="flex items-center mb-2">
+                            {[...Array(Math.floor(averageRating))].map((_, index) => (
+                                <i key={index} className="fas fa-star text-orange-600" />
+                            ))}
+                            {averageRating % 1 !== 0 && (
+                                <i className="fas fa-star-half-alt text-orange-600" />
+                            )}
+                            {[...Array(5 - Math.ceil(averageRating))].map((_, index) => (
+                                <i key={index} className="fas fa-star text-gray-300" />
+                            ))}
+                        </div>
+                        <div className="text-orange-600">Course Rating</div>
                     </div>
-                    <p className="text-sm text-gray-600">{averageRating} out of 5 stars</p>
+                </div>
+
+                <div className="space-y-2">
+                    {[5, 4, 3, 2, 1].map((rating) => (
+                        <div key={rating} className="flex items-center">
+                            <div className="flex items-center mr-2">
+                                {[...Array(rating)].map((_, index) => (
+                                    <i key={index} className="fas fa-star text-orange-600" />
+                                ))}
+                                {[...Array(5 - rating)].map((_, index) => (
+                                    <i key={index} className="fas fa-star text-gray-300" />
+                                ))}
+                            </div>
+                            <div className="w-48 h-4 bg-gray-300 relative mr-2">
+                                <div
+                                    className="absolute top-0 left-0 h-4 bg-gray-600"
+                                    style={{ width: `${calculateRatingPercentage(rating)}%` }}
+                                />
+                            </div>
+                            <span className="text-purple-600">{calculateRatingPercentage(rating).toFixed(0)}%</span>
+                        </div>
+                    ))}
                 </div>
 
                 {!userReviewed && (

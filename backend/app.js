@@ -11,6 +11,7 @@ import skillRoutes from './routes/skillRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import webinarRoutes from './routes/webinarRoutes.js'
 
+
 dotenv.config();
 
 const app = express();
@@ -28,13 +29,14 @@ app.use('/resource', resourceRoutes);
 app.use('/skill',skillRoutes)
 app.use('/review',reviewRoutes);
 app.use('/webinar',webinarRoutes);
+app.use('/pdf',resourceRoutes)
 
 // Handle file path issues in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configure multer for file uploads
-
+// Serve static files from the 'uploads' folder
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // File upload route
 

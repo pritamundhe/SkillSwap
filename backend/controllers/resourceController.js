@@ -170,3 +170,21 @@ export const uploadPdfHandler = async (req, res) => {
     res.status(500).json({ error: 'Failed to upload PDF' });
   }
 };
+
+
+export const getAll = async (req, res) => {
+  try {
+    const { skillId } = req.params;
+    console.log('Fetching PDFs for Skill ID:', skillId); // Log the skillId
+
+    const skill = await Skill.findById(skillId).populate('pdfs');
+    if (!skill) {
+      return res.status(404).json({ error: 'Skill not found' });
+    }
+
+    res.json(skill.pdfs);
+  } catch (err) {
+    console.error('Error fetching PDFs:', err);
+    res.status(500).json({ error: 'Failed to fetch PDFs' });
+  }
+};
