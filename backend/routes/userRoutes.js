@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, logoutUser, getUserProfile, updateUserProfile} from '../controllers/userController.js';
+import { registerUser, loginUser, logoutUser, getUserProfile, updateUserProfile,getUser} from '../controllers/userController.js';
 import upload from '../middleware/uploadMiddleware.js';
 
 
@@ -9,6 +9,7 @@ router.get('/',(req, res)=>{
     res.send('Welcome to the user route');
 })
 router.post('/register', registerUser);
+router.get('/:email', getUser);
 router.post('/login', loginUser);
 router.post('/logout', logoutUser);
 router.get('/profile/:userId', getUserProfile);

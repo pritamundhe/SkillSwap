@@ -38,6 +38,12 @@ import CreateWebinar from './components/Webinars/CreateWebinar';
 import ChatBot from './components/Messaging/ChatBot';
 import SWebinar from './components/Webinars/SWebinar';
 import CollectionList from './Collection/CollectionList';
+import ScheduledWebinars from './components/Webinars/ScheduledWebinar';
+import ScheduledWebinarDetails from './components/Webinars/ScheduledWebinarDetails';
+import AboutUs from './components/Common/AboutUs';
+import ContactUs from './components/Common/ContactUs';
+import TermsOfUse from './components/Common/TermsofUse';
+import PrivacyPolicy from './components/Common/PrivacyPolicy';
 
 
 function App() {
@@ -84,10 +90,16 @@ function App() {
           <Route path='/SkillManagement' element={<SkillManagement/>}/>
           <Route path='/Reports' element={<Reports/>}/>
           <Route path='/ProfileEdit' element={<ProfileEdit/>}/>
+          <Route path="/ScheduledWebinars" element={<ScheduledWebinars/>} />
           <Route path='/ResourcePage/:resourceId' element={<ResourcePage/>}/>
           {/* <Route path='/ResourceList' element={<ResourceList/>}/> */}
           <Route path='/Pricing' element={<Pricing />}/>
           <Route path="/skill/:skillId" element={<SkillPage />} />
+          <Route path="/scheduled-webinar/:id" element={<ScheduledWebinarDetails />} /> 
+          <Route path="/AboutUs" element={<AboutUs />} />
+          <Route path='/ContactUs' element={<ContactUs/>} /> 
+          <Route path='/TermsOfUse' element={<TermsOfUse/>} /> 
+          <Route path='/PrivacyPolicy' element={<PrivacyPolicy/>} /> 
           {/* Add other routes here */}
         </Routes>
         <Footer />

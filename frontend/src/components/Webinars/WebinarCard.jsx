@@ -7,14 +7,15 @@ const WebinarCard = ({ webinar }) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
+  const Webinarid = webinar._id;
 
   const handleJoinWebinar = async (event) => {
     event.preventDefault(); // Prevent immediate navigation
-
     try {
       const userEmail =localStorage.getItem('email') // Replace this with actual user email logic
       // Send email notification
       await axios.post('http://localhost:5000/webinar/registerwebinar', {
+        WebinarId:Webinarid,
         email: userEmail,
         webinarTitle: webinar.title,
         googleMeetLink:webinar.googleMeetLink,

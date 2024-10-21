@@ -39,17 +39,49 @@ export const createWebinar = async (req, res) => {
     }
 };
 
-// In your backend (e.g., Express.js)
+
+
 export const getWebinars = async (req, res) => {
+    const { email } = req.query; // Get the user email from query params
+
+    if (!email) {
+        return res.status(400).json({ message: 'User email is required' });
+    }
+
     try {
-        const webinars = await Webinar.find();  // Fetch all webinars from the database
+        // Step 1: Find the user by their email
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Step 2: Get the list of webinar IDs the user has registered for
+        const registeredWebinarIds = user.webinarsRegistered || [];
+
+        // Step 3: Fetch all webinars except the ones the user has registered for
+        const webinars = await Webinar.find({
+            _id: { $nin: registeredWebinarIds } // Exclude registered webinars
+        });
+
+        // Step 4: Check if there are any available webinars
+        if (webinars.length === 0) {
+            return res.status(200).json({ message: 'No available webinars for this user' });
+        }
+
+        // Step 5: Return the available webinars
         res.status(200).json(webinars);
+
     } catch (error) {
+        console.error('Error fetching webinars:', error); // Log the error
         res.status(500).json({ message: 'Error fetching webinars' });
     }
 };
+
+
+
 export const registerForWebinar = async (req, res) => {
-    const { email, webinarTitle, googleMeetLink, description, Date } = req.body;
+    const { email, webinarTitle, googleMeetLink, description, Date ,WebinarId} = req.body;
     console.log(req.body);
     console.log(email);
   
@@ -81,7 +113,7 @@ export const registerForWebinar = async (req, res) => {
   
         We are excited to have you join us and look forward to your participation!
   
-        If you have any questions, feel free to reach out to us at SkillSwap.
+        If you have any questions, feel free to reach out to us at  SkillSwap.
   
         Best regards,
         The SkillSwap Team
@@ -89,11 +121,30 @@ export const registerForWebinar = async (req, res) => {
     };
   
     try {
-      // Send email
       await transporter.sendMail(mailOptions);
+
+      const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Check if the webinar exists
+    const webinar = await Webinar.findById(WebinarId);
+    if (!webinar) {
+      return res.status(404).json({ message: 'Webinar not found' });
+    }
+
+    // Add the webinar to the user's webinars array if not already added
+    if (!user.webinarsRegistered.includes(WebinarId)) {
+      user.webinarsRegistered.push(WebinarId);
+      await user.save();
+    }
+
       res.status(200).send('Registration email sent!');
     } catch (error) {
       res.status(500).send('Error sending email.');
+      console.log(error);
     }
   };
   
@@ -134,3 +185,14 @@ export const addToCollection = async (req, res) => {
     }
   };
   
+  export const getRegisteredWebinars = async (req, res) => {
+    try {
+      const user = await User.findOne({ email: req.params.email }).populate('webinarsRegistered');
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      res.json(user.webinarsRegistered);
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching registered webinars' });
+    }
+  } 
