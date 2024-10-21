@@ -37,6 +37,7 @@ import Joinwebinar from './components/Webinars/Webinar';
 import CreateWebinar from './components/Webinars/CreateWebinar';
 import ChatBot from './components/Messaging/ChatBot';
 import SWebinar from './components/Webinars/SWebinar';
+import CollectionList from './Collection/CollectionList';
 
 
 function App() {
@@ -74,7 +75,7 @@ function App() {
           <Route path="/join" element={<Joinwebinar/>} />
           <Route path='/Chatbot' element={<ChatBot/>} />
           <Route path="/webinar/:id" element={<SWebinar />} />
-
+          <Route path="/collection" element={<CollectionList/>} />
           <Route path="/ProfileEdit" element={<ProfileEdit />} />
           <Route path='/ChatApp' element={<ChatApp/>}/>
           <Route path='/AdminDashboard' element={<AdminDashboard/>}/>

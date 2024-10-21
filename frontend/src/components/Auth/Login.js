@@ -15,28 +15,25 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-  
+    
     try {
       const response = await axios.post('http://localhost:5000/users/login', {
         email,
         password,
       });
   
-      const { success, message, jwtToken, eami, name ,Id} = response.data; 
-      console.log(response.data)
+      const { success, message, jwtToken,email: userEmail, name, Id } = response.data; 
+      console.log(response.data);
       if (success) {
-
- 
         const userData = jwtDecode(jwtToken);
         console.log('User logged in:', userData);
-  
+    
         localStorage.setItem('token', jwtToken);
         localStorage.setItem('name', name);
-        localStorage.setItem('eamil',eami);
-        localStorage.setItem('userId',Id);
-  
+        localStorage.setItem('email',  userEmail);  // Corrected to 'email'
+        localStorage.setItem('userId', Id);
+    
         login(jwtToken); 
-  
         navigate('/Profile');
       } else {
         setError(message);
@@ -46,6 +43,7 @@ const Login = () => {
       setError(err.response ? err.response.data.message : 'Something went wrong!');
     }
   };
+  
 
   return (
     <div className="flex mt-10 items-center justify-center bg-gradient-to-r from-white-500 to-indigo-500">

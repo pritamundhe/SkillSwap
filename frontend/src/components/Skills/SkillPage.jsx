@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ReviewList from '../Reviews/ReviewList'; // Assuming this is a separate component for handling reviews.
+import { FiPlus } from "react-icons/fi";
 
 const SkillPage = () => {
   const { skillId } = useParams(); // Get the skillId from URL parameters
@@ -55,6 +56,31 @@ const SkillPage = () => {
   // Toggle review panel visibility
   const toggleReviewPanel = () => {
     setShowReviewPanel(!showReviewPanel); // Toggle the state
+  };
+
+  const handleAddToCollection = async () => {
+    const userId =localStorage.getItem('userId');// Replace this with the actual user ID, possibly from context or local storage
+  
+    try {
+      const response = await fetch('http://localhost:5000/webinar/addToCollection', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, skillId }), // Sending userId and skillId in the body
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to add skill to collection');
+      }
+  
+      const data = await response.json();
+      console.log('Skill added to collection:', data);
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+    alert("Skill added to your collection");
+    navigate("/collection");
   };
 
   if (loading) {
@@ -163,6 +189,17 @@ const SkillPage = () => {
           <i className="fas fa-share-alt"></i>
           <i className="fas fa-ellipsis-h"></i>
         </div>
+
+        <div
+            className="rounded-lg shadow-lg p-6 flex bg-purple-500 text-white gap-3 items-center hover:bg-purple-400 cursor-pointer
+            mx-auto w-fit"
+            onClick={handleAddToCollection} // Call the function when clicked
+          >
+            <FiPlus size={20} />
+            <div className="space-x-4">
+              Add to your collection
+            </div>
+          </div>
 
         {/* Reviews Section */}
         <div className="flex items-center justify-end mt-4 space-x-4">
