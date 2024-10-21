@@ -1,5 +1,5 @@
 import express from 'express';
-import { createWebinar,getWebinars,registerForWebinar,getWebinarDetails} from '../controllers/webinarController.js';
+import { createWebinar,getWebinars,registerForWebinar,getWebinarDetails,addToCollection} from '../controllers/webinarController.js';
 
 
 
@@ -9,7 +9,7 @@ router.post("/createwebinar",createWebinar);
 router.get('/getwebinar', getWebinars);
 router.get('/getwebinardetails/:id',getWebinarDetails);
 router.post('/registerwebinar',registerForWebinar);
-
+router.post('/addToCollection', addToCollection);
 
 
 

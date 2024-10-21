@@ -132,7 +132,7 @@ export const deleteSkill = async (req, res) => {
 export const skillDetails=async (req,res)=>{
     const skillId = req.params.skillId; // Extract the userId from the request params
     try {
-        const skills = await Skill.findOne({ _id: skillId }) // Adjust the query to filter by user
+        const skills = await Skill.findOne({ _id: skillId }).populate('addedBy', 'name'); // Adjust the query to filter by user
         res.status(200).json(skills);
     } catch (error) {
         console.error("Error fetching skills:", error);
@@ -140,3 +140,17 @@ export const skillDetails=async (req,res)=>{
     }
 
 };
+
+export const getCollection =async(req,res)=>{
+    try {
+    const { userId } = req.params;
+    // Fetch user's collection of skills
+    const user = await User.findById(userId).populate('collection'); // Assuming collection is an array of skills
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json(user.collection); // Send the collection
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching collection', error });
+  }
+}

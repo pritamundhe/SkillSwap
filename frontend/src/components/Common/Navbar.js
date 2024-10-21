@@ -47,7 +47,7 @@ const Navbar = () => {
             <li><Link to="/" className="text-gray-600 hover:text-purple-600">Home</Link></li>
             <li><Link to="/AllSkills" className="text-gray-600 hover:text-purple-600">Skills</Link></li>
             <li><Link to="/webinar" className="text-gray-600 hover:text-purple-600">Webinar</Link></li>
-            <li><Link to="/Chatbot" className="text-gray-600 hover:text-purple-600">Messages</Link></li>
+            <li><Link to="/collection" className="text-gray-600 hover:text-purple-600">Collection</Link></li>
           </ul>
         </div>
         {/* Mobile Menu Toggle Button */}
@@ -68,7 +68,7 @@ const Navbar = () => {
                 className="w-10 h-10 rounded-full object-cover cursor-pointer"
                 onClick={() => navigate('/Profile')}
               />
-              <span className="text-gray-600 cursor-pointer" onClick={() => navigate('/Profile')}>
+              <span className="text-gray-600 cursor-pointer" onClick={() => navigate('/ProfileView')}>
                 {user?.name || 'User'}
               </span>
               <button onClick={handleLogout} className="text-white bg-red-600 hover:bg-red-500 px-4 py-1.5">

@@ -67,6 +67,12 @@ const userSchema = new mongoose.Schema({
     ref: 'Resource',
   }],
   // Account Information
+  collection: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Skill', // Reference to the Skill model
+    }
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

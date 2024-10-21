@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom";
 import ReviewList from '../Reviews/ReviewList';
+import { FiPlus } from "react-icons/fi";
+import { FaFacebookSquare } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
+import { FaWhatsapp } from "react-icons/fa";
 
 const SkillPage = () => {
   const { skillId } = useParams(); // Get the skillId from URL parameters
@@ -44,6 +48,31 @@ const SkillPage = () => {
     fetchData();
   }, [skillId]); // Run effect when skillId changes
 
+  const handleAddToCollection = async () => {
+    const userId =localStorage.getItem('userId');// Replace this with the actual user ID, possibly from context or local storage
+  
+    try {
+      const response = await fetch('http://localhost:5000/webinar/addToCollection', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId, skillId }), // Sending userId and skillId in the body
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to add skill to collection');
+      }
+  
+      const data = await response.json();
+      console.log('Skill added to collection:', data);
+    } catch (error) {
+      console.error('Error:', error.message);
+    }
+    alert("Skill added to your collection");
+    navigate("/collection");
+  };
+  
   const handleReviewAdded = (newReview) => {
     setSkill((prevSkill) => ({
       ...prevSkill,
@@ -105,7 +134,7 @@ const SkillPage = () => {
           {/* User Info Box */}
           <div className="bg-gray-100 rounded-lg shadow-lg p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              {skill.author?.name || 'Unknown Author'} {/* Dynamic author name with fallback */}
+              {skill.addedBy?.name || 'Unknown Author'} {/* Dynamic author name with fallback */}
             </h2>
             <p className="text-sm text-gray-600 mb-4">
               {skill.author?.bio || 'No bio available.'} {/* Dynamic author bio with fallback */}
@@ -125,6 +154,18 @@ const SkillPage = () => {
             <div className="flex space-x-4">
               {/* Social Share Buttons */}
               {/* Add your social share buttons here */}
+              <FaFacebookSquare size={24} className="text-blue-600" />
+              <FaLinkedin size={24} className="text-blue-600" />
+              <FaWhatsapp size={24} className="text-green-600" />
+            </div>
+          </div>
+          <div
+            className="rounded-lg shadow-lg p-6 flex bg-purple-500 text-white gap-3 items-center hover:bg-purple-400 cursor-pointer"
+            onClick={handleAddToCollection} // Call the function when clicked
+          >
+            <FiPlus size={20} />
+            <div className="space-x-4">
+              Add to your collection
             </div>
           </div>
         </aside>
@@ -171,8 +212,8 @@ const SkillPage = () => {
       <div className="container mx-auto px-6 md:px-10 lg:px-20 mt-8 ">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <ReviewList skill={skill} skillId={skillId} onReviewAdded={handleReviewAdded} />
-          </div>
         </div>
+      </div>
     </div>
   );
 };

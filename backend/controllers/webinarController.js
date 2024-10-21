@@ -57,13 +57,13 @@ export const registerForWebinar = async (req, res) => {
     const transporter = nodemailer.createTransport({
       service: 'Gmail', // You can use any email service
       auth: {
-        user: 'ommali1906p@gmail.com', // Use your email
-        pass: 'kxmowwvqnxrbbwfg', // Use your email password
+        user: 'contact.skillswap@gmail.com', // Use your email
+        pass: 'mtmstfcenrryopyi', // Use your email password
       },
     });
   
     const mailOptions = {
-      from: 'ommali1906p@gmail.com', // Sender address
+      from: 'contact.skillswap@gmail.com', // Sender address
       to: email, // Recipient address (user's email)
       subject: `Registration Confirmation for ${webinarTitle}`,
       text: `
@@ -112,3 +112,25 @@ export const registerForWebinar = async (req, res) => {
     }
 };
 
+export const addToCollection = async (req, res) => {
+    const { userId, skillId } = req.body; // Assume you're sending userId and skillId in the request body
+  
+    try {
+      // Find the user by ID and update their collection
+      const user = await User.findByIdAndUpdate(
+        userId,
+        { $addToSet: { collection: skillId } }, // Add skillId to the collection (using $addToSet to avoid duplicates)
+        { new: true }
+      ).populate('collection'); // Optionally populate the collection to return the full skill details
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      res.status(200).json({ message: 'Skill added to collection', user });
+    } catch (error) {
+      console.error('Error adding skill to collection:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  
