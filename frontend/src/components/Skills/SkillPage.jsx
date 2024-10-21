@@ -7,12 +7,13 @@ const SkillPage = () => {
   const { skillId } = useParams(); // Get the skillId from URL parameters
   const [skill, setSkill] = useState(null);
   const [resources, setResources] = useState([]); // State for resources
+  const [pdfs, setPdfs] = useState([]); // State for PDFs
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showReviewPanel, setShowReviewPanel] = useState(false); // State to manage review panel visibility
   const navigate = useNavigate();
 
-  // Fetch skill details and resources when component mounts
+  // Fetch skill details, resources, and PDFs when component mounts
   useEffect(() => {
     const fetchSkill = async () => {
       try {
@@ -40,9 +41,22 @@ const SkillPage = () => {
       }
     };
 
+    const fetchPdfs = async () => {
+      try {
+        const response = await fetch(`http://localhost:5000/pdf/getAll/${skillId}`); // Fetch PDFs by skill ID
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setPdfs(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
     const fetchData = async () => {
-      await Promise.all([fetchSkill(), fetchResources()]); // Wait for both fetches to complete
-      setLoading(false); // Set loading to false after both fetches
+      await Promise.all([fetchSkill(), fetchResources(), fetchPdfs()]); // Wait for all fetches to complete
+      setLoading(false); // Set loading to false after all fetches
     };
 
     fetchData();
@@ -59,8 +73,8 @@ const SkillPage = () => {
   };
 
   const handleAddToCollection = async () => {
-    const userId =localStorage.getItem('userId');// Replace this with the actual user ID, possibly from context or local storage
-  
+    const userId = localStorage.getItem('userId'); // Replace this with the actual user ID, possibly from context or local storage
+
     try {
       const response = await fetch('http://localhost:5000/webinar/addToCollection', {
         method: 'POST',
@@ -69,11 +83,11 @@ const SkillPage = () => {
         },
         body: JSON.stringify({ userId, skillId }), // Sending userId and skillId in the body
       });
-  
+
       if (!response.ok) {
         throw new Error('Failed to add skill to collection');
       }
-  
+
       const data = await response.json();
       console.log('Skill added to collection:', data);
     } catch (error) {
@@ -83,6 +97,12 @@ const SkillPage = () => {
     navigate("/collection");
   };
 
+  // Function to handle PDF click
+  const handlePdfClick = (pdfPath) => {
+    const baseUrl = 'http://localhost:5000/'; // Base URL of your server
+    window.open(`${baseUrl}${pdfPath}`, '_blank'); // Open the PDF in a new tab with the full URL
+  };
+  
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -96,12 +116,10 @@ const SkillPage = () => {
   }
 
   return (
-    <div className="bg-white font-roboto min-h-screen">
-      <div className="max-w-4xl mx-auto p-6">
+    <div className="bg-white font-roboto min-h-screen flex">
+      <div className="max-w-4xl mx-auto p-6 flex-1">
         {/* Skill Title */}
-        <h1 className="text-4xl font-bold text-gray-900">
-          {skill.name}
-        </h1>
+        <h1 className="text-4xl font-bold text-gray-900">{skill.name}</h1>
 
         {/* Skill Subtitle */}
         <p className="text-xl text-gray-600 mt-2">
@@ -182,61 +200,48 @@ const SkillPage = () => {
           </ul>
         </div>
 
+        {/* PDF Section */}
+        <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
+          <h2 className="text-xl font-semibold mb-2">PDFs</h2>
+          <ul className="list-disc list-inside space-y-1">
+            {pdfs.length > 0 ? (
+              pdfs.map((pdf) => (
+                <li
+                  key={pdf._id}
+                  className="text-blue-600 cursor-pointer"
+                  onClick={() => handlePdfClick(pdf.filePath)} // Assuming pdf.url contains the URL of the PDF
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && handlePdfClick(pdf.filePath)}
+                >
+                  {pdf.title}
+                </li>
+              ))
+            ) : (
+              <li>No PDFs available</li>
+            )}
+          </ul>
+        </div>
+
         {/* Share & Bookmark Section */}
         <div className="flex items-center justify-end mt-4 space-x-4 text-gray-600">
-          <i className="fas fa-bookmark"></i>
-          <i className="fas fa-play-circle"></i>
-          <i className="fas fa-share-alt"></i>
-          <i className="fas fa-ellipsis-h"></i>
-        </div>
-
-        <div
-            className="rounded-lg shadow-lg p-6 flex bg-purple-500 text-white gap-3 items-center hover:bg-purple-400 cursor-pointer
-            mx-auto w-fit"
-            onClick={handleAddToCollection} // Call the function when clicked
-          >
-            <FiPlus size={20} />
-            <div className="space-x-4">
-              Add to your collection
-            </div>
-          </div>
-
-        {/* Reviews Section */}
-        <div className="flex items-center justify-end mt-4 space-x-4">
-          {/* Updated Review Button */}
-          <button
-            className="bg-blue-600 text-white py-2 px-4 rounded focus:outline-none"
-            onClick={toggleReviewPanel}
-            title="Add Review"
-          >
-            Add Review
+          <i className="fas fa-bookmark cursor-pointer" onClick={handleAddToCollection}>
+            <span className="ml-2">Add to Collection</span>
+          </i>
+          <button className="flex items-center bg-blue-600 text-white py-2 px-4 rounded-lg" onClick={toggleReviewPanel}>
+            <FiPlus className="mr-2" />
+            Add a Review
           </button>
-        </div>
-
-        {/* Sliding Review Panel */}
-        <div
-          className={`fixed top-0 right-0 h-full w-96 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
-            showReviewPanel ? 'translate-x-0' : 'translate-x-full'
-          }`}
-          style={{ zIndex: 1000 }}
-        >
-          {/* Close Button */}
-          <button
-            className="absolute top-2 right-2 p-2 text-gray-700"
-            onClick={toggleReviewPanel}
-          >
-            &times;
-          </button>
-          
-          {/* Review List Component */}
-          <div className="h-full overflow-y-auto p-4">
-            <ReviewList skill={skill} skillId={skillId} onReviewAdded={(newReview) => setSkill((prevSkill) => ({
-              ...prevSkill,
-              reviews: [...prevSkill.reviews, newReview],
-            }))} />
-          </div>
         </div>
       </div>
+
+      {/* Review Panel */}
+      {showReviewPanel && (
+        <div className="w-1/3 bg-gray-100 p-4">
+          <h2 className="text-xl font-semibold mb-2">Reviews</h2>
+          <ReviewList skillId={skillId} /> {/* Pass the skillId to the ReviewList component */}
+        </div>
+      )}
     </div>
   );
 };

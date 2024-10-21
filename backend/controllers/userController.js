@@ -9,9 +9,6 @@ export const updateUserProfile = async (req, res) => {
     const userId = req.params.userId; // Ensure correct extraction of userId
     const image = req.file.path;
     // Optionally validate the input data here
-    if (!name || !email) {
-      return res.status(400).json({ message: 'Name and email are required.' });
-    }
 
     const user = await User.findById(userId); // Use findById for clarity
 

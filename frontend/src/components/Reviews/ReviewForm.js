@@ -1,19 +1,52 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const ReviewForm = ({ skillId, onReviewAdded }) => { // Add userId as a prop
+const ReviewForm = ({ skillId, onReviewAdded }) => {
     const [rating, setRating] = useState(0);
     const [description, setDescription] = useState('');
     const [hoverRating, setHoverRating] = useState(0);
+    const [ratingLabel, setRatingLabel] = useState('');
+
+    const getRatingLabel = (ratingValue) => {
+        switch (ratingValue) {
+            case 1:
+                return 'Awful, not what I expected at all';
+            case 2:
+                return 'Poor, pretty disappointed';
+            case 3:
+                return 'Average, could be better';
+            case 4:
+                return 'Good, what I expected';
+            case 5:
+                return 'Amazing, above expectations!';
+            default:
+                return ' ';
+        }
+    };
+
+    const handleRatingChange = (star) => {
+        setRating(star);
+        setRatingLabel(getRatingLabel(star)); // Update label on star click
+    };
+
+    const handleMouseEnter = (star) => {
+        setHoverRating(star);
+        setRatingLabel(getRatingLabel(star)); // Update label on hover
+    };
+
+    const handleMouseLeave = () => {
+        setHoverRating(0);
+        setRatingLabel(getRatingLabel(rating)); // Reset to selected rating
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const userId=localStorage.getItem('userId');
+        const userId = localStorage.getItem('userId');
 
         try {
             const response = await axios.post(`http://localhost:5000/review/addReview`, {
-                userId, // Include userId in the request body
-                skillId, // Include skillId in the request body
+                userId,
+                skillId,
                 rating,
                 comment: description,
             });
@@ -25,27 +58,32 @@ const ReviewForm = ({ skillId, onReviewAdded }) => { // Add userId as a prop
             // Reset the form
             setRating(0);
             setDescription('');
+            setRatingLabel(''); // Reset the label
         } catch (error) {
             console.error("Error adding review:", error.response?.data?.msg || error.message);
         }
     };
 
     return (
-        <div className="max-w-lg md:w-full bg-white rounded-md p-4 shadow-md shadow-gray-500">
-            <h2 className="text-xl font-bold mb-4">Leave a Review</h2>
+        <div className="max-w-lg md:w-full bg-white rounded-md p-4">
+            <h2 className="text-center text-2xl font-semibold mb-2">Why did you leave this rating?</h2>
             <form onSubmit={handleSubmit}>
                 {/* Star Rating */}
                 <div className="mb-4">
-                    <label className="block text-gray-700 font-medium mb-2">Rating:</label>
-                    <div className="flex space-x-1">
+                    
+                        <div className="text-center text-gray-600 mt-2 mb-2"> {/* Added margin-bottom */}
+                            <strong>{ratingLabel}</strong>
+                        </div>
+                    
+                    <div className="flex justify-center space-x-3 mb-10">
                         {[1, 2, 3, 4, 5].map((star) => (
                             <button
                                 key={star}
                                 type="button"
-                                className={`w-8 h-8 text-2xl ${star <= (hoverRating || rating) ? 'text-purple-600' : 'text-gray-300'}`}
-                                onClick={() => setRating(star)}
-                                onMouseEnter={() => setHoverRating(star)}
-                                onMouseLeave={() => setHoverRating(0)}
+                                className={`w-9 h-9 text-4xl ${star <= (hoverRating || rating) ? 'text-purple-600' : 'text-gray-300'}`}
+                                onClick={() => handleRatingChange(star)}
+                                onMouseEnter={() => handleMouseEnter(star)}
+                                onMouseLeave={handleMouseLeave}
                             >
                                 ★
                             </button>
@@ -54,12 +92,11 @@ const ReviewForm = ({ skillId, onReviewAdded }) => { // Add userId as a prop
                 </div>
 
                 {/* Review Description */}
-                <div className="mb-4">
-                    <label className="block text-gray-700 font-medium mb-2">Description:</label>
+                <div className="">
                     <textarea
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-full border border-gray-500 p-4 rounded-sm mb-4"
                         rows="4"
                         placeholder="Write your review here..."
                         required
@@ -67,10 +104,10 @@ const ReviewForm = ({ skillId, onReviewAdded }) => { // Add userId as a prop
                 </div>
 
                 {/* Submit Button */}
-                <div>
+                <div className="flex justify-end">
                     <button
                         type="submit"
-                        className="px-4 py-2 bg-purple-600 text-white font-semibold rounded-sm hover:text-purple-600 border border-purple-700 hover:bg-white focus:outline-none focus:ring-2 focus:ring-purple-600"
+                        className="px-8 py-2 bg-gray-900 text-white font-semibold rounded-sm focus:outline-none focus:ring-2 focus:ring-purple-600"
                     >
                         Submit Review
                     </button>

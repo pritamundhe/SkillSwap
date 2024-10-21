@@ -43,7 +43,7 @@ const ProfileEdit = ({ setShowModal }) => {
     if (file) {
       formData.append('image', file);
     }
-
+    console.log(file.path)
     try {
       const response = await axios.put(
         `http://localhost:5000/users/profile/${userId}`,
@@ -51,7 +51,7 @@ const ProfileEdit = ({ setShowModal }) => {
         {
           headers: {
             'Content-Type': 'multipart/form-data',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+
           },
         }
       );
@@ -87,9 +87,7 @@ const ProfileEdit = ({ setShowModal }) => {
       if (userId) {
         try {
           const response = await axios.get(`http://localhost:5000/users/profile/${userId}`, {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
+           
           });
           setProfile(response.data);
         } catch (error) {
