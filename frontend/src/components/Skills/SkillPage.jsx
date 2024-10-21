@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import ReviewList from '../Reviews/ReviewList';
+import ReviewList from '../Reviews/ReviewList'; // Assuming this is a separate component for handling reviews.
 import { FiPlus } from "react-icons/fi";
-import { FaFacebookSquare } from "react-icons/fa";
-import { FaLinkedin } from "react-icons/fa";
-import { FaWhatsapp } from "react-icons/fa";
 
 const SkillPage = () => {
   const { skillId } = useParams(); // Get the skillId from URL parameters
@@ -12,7 +9,10 @@ const SkillPage = () => {
   const [resources, setResources] = useState([]); // State for resources
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showReviewPanel, setShowReviewPanel] = useState(false); // State to manage review panel visibility
   const navigate = useNavigate();
+
+  // Fetch skill details and resources when component mounts
   useEffect(() => {
     const fetchSkill = async () => {
       try {
@@ -48,6 +48,16 @@ const SkillPage = () => {
     fetchData();
   }, [skillId]); // Run effect when skillId changes
 
+  // Navigate to ResourcePage when a resource is clicked
+  const handleResourceClick = (resourceId) => {
+    navigate(`/ResourcePage/${resourceId}`); // Navigate to the resource page using resourceId
+  };
+
+  // Toggle review panel visibility
+  const toggleReviewPanel = () => {
+    setShowReviewPanel(!showReviewPanel); // Toggle the state
+  };
+
   const handleAddToCollection = async () => {
     const userId =localStorage.getItem('userId');// Replace this with the actual user ID, possibly from context or local storage
   
@@ -72,18 +82,6 @@ const SkillPage = () => {
     alert("Skill added to your collection");
     navigate("/collection");
   };
-  
-  const handleReviewAdded = (newReview) => {
-    setSkill((prevSkill) => ({
-      ...prevSkill,
-      reviews: [...prevSkill.reviews, newReview],
-    }));
-  };
-
-  // Handler to navigate to ResourcePage with resourceId
-  const handleResourceClick = (resourceId) => {
-    navigate(`/ResourcePage/${resourceId}`); // Navigate to the resource page using resourceId
-  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -98,107 +96,82 @@ const SkillPage = () => {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen p-6 bg-gradient-to-r from-purple-100 via-blue-50 to-blue-200">
-      <div className="container mx-auto px-6 md:px-10 lg:px-20 flex flex-col md:flex-row gap-8">
-        {/* Main Skill Content */}
-        <div className="w-full md:w-3/4 bg-white rounded-lg shadow-lg p-6">
-          {/* Category Label */}
-          <div className="mb-2">
-            <span className="bg-purple-100 text-purple-600 text-xs font-semibold px-2 py-1 rounded-full">
-              {skill.category} {/* Dynamic category */}
-            </span>
-          </div>
+    <div className="bg-white font-roboto min-h-screen">
+      <div className="max-w-4xl mx-auto p-6">
+        {/* Skill Title */}
+        <h1 className="text-4xl font-bold text-gray-900">
+          {skill.name}
+        </h1>
 
-          {/* Skill Title */}
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            {skill.title} {/* Dynamic title */}
-          </h1>
+        {/* Skill Subtitle */}
+        <p className="text-xl text-gray-600 mt-2">
+          Boost Your Knowledge with {skill.name}
+        </p>
 
-          {/* Skill Image */}
-          <div className="relative mb-6">
-            <img
-              src={skill.image || '/logo192.png'}
-              alt={skill.name}
-              className="w-full h-64 object-cover rounded-lg shadow-md"
-            />
-          </div>
-
-          {/* Skill Content */}
-          <div className="prose max-w-none">
-            <p>{skill.content}</p> {/* Dynamic content */}
+        {/* Author and Meta Info */}
+        <div className="flex items-center mt-4">
+          <img
+            alt={`Profile picture of ${skill.addedBy?.name || 'the author'}`}
+            className="w-10 h-10 rounded-full"
+            src={skill.author?.profilePicture || 'https://via.placeholder.com/40'}
+            width="40"
+            height="40"
+          />
+          <div className="ml-3">
+            <p className="text-gray-900 font-semibold">
+              {skill.addedBy?.name || 'Unknown Author'}
+              <span className="text-green-600"> • Follow</span>
+            </p>
+            <p className="text-gray-600 text-sm">
+              {skill.author?.bio || 'No bio available'} • {skill.publishedAt || 'N/A'}
+            </p>
           </div>
         </div>
 
-        {/* Sidebar with Author Info */}
-        <aside className="w-full md:w-1/4 flex flex-col gap-6">
-          {/* User Info Box */}
-          <div className="bg-gray-100 rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              {skill.addedBy?.name || 'Unknown Author'} {/* Dynamic author name with fallback */}
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              {skill.author?.bio || 'No bio available.'} {/* Dynamic author bio with fallback */}
-            </p>
-            <a href={skill.author?.link} className="text-blue-600 hover:underline inline-flex items-center">
-              {/* LinkedIn Icon */}
-              <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
-                {/* LinkedIn Icon SVG Path */}
-              </svg>
-              LinkedIn
-            </a>
+        {/* Social Stats */}
+        <div className="flex items-center mt-4 text-gray-600">
+          <div className="flex items-center mr-6">
+            <i className="fas fa-hand-holding-heart"></i>
+            <span className="ml-2">3.3K</span>
           </div>
+          <div className="flex items-center">
+            <i className="fas fa-comment"></i>
+            <span className="ml-2">{skill.reviews?.length || 0}</span>
+          </div>
+        </div>
 
-          {/* Social Share Buttons Box */}
-          <div className="bg-gray-100 rounded-lg shadow-lg p-6">
-            <p className="text-gray-500 text-sm mb-2">Share with your community!</p>
-            <div className="flex space-x-4">
-              {/* Social Share Buttons */}
-              {/* Add your social share buttons here */}
-              <FaFacebookSquare size={24} className="text-blue-600" />
-              <FaLinkedin size={24} className="text-blue-600" />
-              <FaWhatsapp size={24} className="text-green-600" />
-            </div>
-          </div>
-          <div
-            className="rounded-lg shadow-lg p-6 flex bg-purple-500 text-white gap-3 items-center hover:bg-purple-400 cursor-pointer"
-            onClick={handleAddToCollection} // Call the function when clicked
-          >
-            <FiPlus size={20} />
-            <div className="space-x-4">
-              Add to your collection
-            </div>
-          </div>
-        </aside>
-      </div>
+        {/* Skill Image */}
+        <div className="mt-6">
+          <img
+            alt={`Image of ${skill.title}`}
+            className="w-full rounded-lg"
+            src={skill.image || '/logo192.png'}
+            width="800"
+            height="400"
+          />
+        </div>
 
-      {/* Description Section */}
-      <div className="container mx-auto px-6 md:px-10 lg:px-20 mt-8">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Description</h2>
-          <p className="text-gray-600 text-base">
-            {skill.description} {/* Dynamic description */}
+        {/* Description */}
+        <div className="mt-6">
+          <h2 className="text-2xl font-semibold text-gray-800">Description</h2>
+          <p className="text-gray-600 text-base mt-2">
+            {skill.description}
           </p>
         </div>
-      </div>
 
-
-      {/* Resources Section */}
-      <div className="container mx-auto px-6 md:px-10 lg:px-20 mt-8 ">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-
+        {/* Resources Section */}
+        <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
           <h2 className="text-xl font-semibold mb-2">Resources</h2>
-
-          {/* Display resources in a list */}
           <ul className="list-disc list-inside space-y-1">
             {resources.length > 0 ? (
               resources.map((resource) => (
                 <li
                   key={resource._id}
                   className="text-blue-600 cursor-pointer"
-                  onClick={() => handleResourceClick(resource._id)} // Navigate on click
-                  role="button" // Adding role for accessibility
-                  tabIndex={0} // Making it keyboard accessible
-                  onKeyDown={(e) => e.key === 'Enter' && handleResourceClick(resource._id)} // Handle Enter key for accessibility
+                  onClick={() => handleResourceClick(resource._id)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => e.key === 'Enter' && handleResourceClick(resource._id)}
                 >
                   {resource.title}
                 </li>
@@ -208,10 +181,60 @@ const SkillPage = () => {
             )}
           </ul>
         </div>
-      </div>
-      <div className="container mx-auto px-6 md:px-10 lg:px-20 mt-8 ">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <ReviewList skill={skill} skillId={skillId} onReviewAdded={handleReviewAdded} />
+
+        {/* Share & Bookmark Section */}
+        <div className="flex items-center justify-end mt-4 space-x-4 text-gray-600">
+          <i className="fas fa-bookmark"></i>
+          <i className="fas fa-play-circle"></i>
+          <i className="fas fa-share-alt"></i>
+          <i className="fas fa-ellipsis-h"></i>
+        </div>
+
+        <div
+            className="rounded-lg shadow-lg p-6 flex bg-purple-500 text-white gap-3 items-center hover:bg-purple-400 cursor-pointer
+            mx-auto w-fit"
+            onClick={handleAddToCollection} // Call the function when clicked
+          >
+            <FiPlus size={20} />
+            <div className="space-x-4">
+              Add to your collection
+            </div>
+          </div>
+
+        {/* Reviews Section */}
+        <div className="flex items-center justify-end mt-4 space-x-4">
+          {/* Updated Review Button */}
+          <button
+            className="bg-blue-600 text-white py-2 px-4 rounded focus:outline-none"
+            onClick={toggleReviewPanel}
+            title="Add Review"
+          >
+            Add Review
+          </button>
+        </div>
+
+        {/* Sliding Review Panel */}
+        <div
+          className={`fixed top-0 right-0 h-full w-96 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+            showReviewPanel ? 'translate-x-0' : 'translate-x-full'
+          }`}
+          style={{ zIndex: 1000 }}
+        >
+          {/* Close Button */}
+          <button
+            className="absolute top-2 right-2 p-2 text-gray-700"
+            onClick={toggleReviewPanel}
+          >
+            &times;
+          </button>
+          
+          {/* Review List Component */}
+          <div className="h-full overflow-y-auto p-4">
+            <ReviewList skill={skill} skillId={skillId} onReviewAdded={(newReview) => setSkill((prevSkill) => ({
+              ...prevSkill,
+              reviews: [...prevSkill.reviews, newReview],
+            }))} />
+          </div>
         </div>
       </div>
     </div>

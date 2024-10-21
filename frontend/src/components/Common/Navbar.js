@@ -8,6 +8,7 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const [profileData, setProfileData] = useState(null);
+  const [showLogout, setShowLogout] = useState(false); // State for showing/hiding logout button
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -16,6 +17,10 @@ const Navbar = () => {
   const handleLogout = () => {
     logout();
     navigate('/'); // Redirect to the homepage
+  };
+
+  const toggleLogout = () => {
+    setShowLogout(!showLogout); // Toggle the visibility of the logout button
   };
 
   const userId = localStorage.getItem('userId');
@@ -68,12 +73,14 @@ const Navbar = () => {
                 className="w-10 h-10 rounded-full object-cover cursor-pointer"
                 onClick={() => navigate('/Profile')}
               />
-              <span className="text-gray-600 cursor-pointer" onClick={() => navigate('/ProfileView')}>
+              <span className="text-gray-600 cursor-pointer" onClick={toggleLogout}>
                 {user?.name || 'User'}
               </span>
-              <button onClick={handleLogout} className="text-white bg-red-600 hover:bg-red-500 px-4 py-1.5">
-                Logout
-              </button>
+              {showLogout && ( // Conditionally render the logout button
+                <button onClick={handleLogout} className="text-white bg-red-600 hover:bg-red-500 px-4 py-1.5">
+                  Logout
+                </button>
+              )}
             </div>
           ) : (
             <>
@@ -102,10 +109,12 @@ const Navbar = () => {
                   className="w-8 h-8 rounded-full object-cover"
                   onClick={() => navigate('/Profile')}
                 />
-                <span className="text-gray-600 cursor-pointer" onClick={() => navigate('/Profile')}>
+                <span className="text-gray-600 cursor-pointer" onClick={toggleLogout}>
                   {user?.name || 'User'}
                 </span>
-                <button onClick={handleLogout} className="text-white bg-red-600 hover:bg-red-500 px-4 py-1.5">Logout</button>
+                {showLogout && (
+                  <button onClick={handleLogout} className="text-white bg-red-600 hover:bg-red-500 px-4 py-1.5">Logout</button>
+                )}
               </li>
             ) : (
               <>
