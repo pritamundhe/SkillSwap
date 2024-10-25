@@ -54,7 +54,7 @@ const CreateWebinar = () => {
 
             const result = await response.json();
             console.log('Webinar created successfully:', result);
-            Navigate("/webinar")
+            Navigate("/join")
 
             setWebinarData({
                 title: '',
